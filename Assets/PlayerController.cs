@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mf_moveSpeed = 10.0f;
 
     [SerializeField] float mf_jumpForce = 50.0f;
-    [SerializeField] float mf_jumpBufferDist = 1.0f;
+    [SerializeField] float mf_jumpBufferTime = 0.2f;
+    [SerializeField] float mf_cyoteTime = 0.25f;
 
     [SerializeField] float mf_CastRadius = 0.1f;
     [SerializeField] Transform m_CastPosition;
@@ -19,6 +20,9 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D m_rb;
     bool isGrounded;
     float mf_axis;
+
+    bool CyoteTime = false;
+    bool JumpBuffer = false;
 
     private void Awake()
     {
@@ -34,14 +38,9 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed) 
+        if (context.performed)
         {
-            if (isGrounded)
-            {
-                m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
-                m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
-            }
-            else if (Physics2D.Linecast(new Vector3(transform.position.x, transform.position.y, 0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0), m_LayerMask))
+            if (isGrounded || CyoteTime || JumpBuffer)
             {
                 m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
                 m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
@@ -49,6 +48,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground")
+        {
+            if (m_rb.velocity.y < 0)
+            {
+                CyoteTime = true;
+                StartCoroutine(IE_CyoteTime());
+            }
+        }
+    }
+
+    IEnumerator IE_CyoteTime()
+    {
+        yield return new WaitForSeconds(mf_cyoteTime);
+        CyoteTime = false;
+    }
 
     public void Move(InputAction.CallbackContext Context)
     {
@@ -74,7 +90,7 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(m_CastPosition.position, mf_CastRadius);
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y,0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0));
+            //Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y,0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0));
         }
     }
 }
