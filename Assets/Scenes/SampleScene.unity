@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 18165647}
   m_Layer: 6
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -534,7 +534,7 @@ GameObject:
   - component: {fileID: 570208905}
   m_Layer: 6
   m_Name: Square (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1217,6 +1217,7 @@ MonoBehaviour:
   mf_moveSpeed: 5
   mf_jumpForce: 6.5
   mf_jumpBufferTime: 1
+  mf_cyoteTime: 0.25
   mf_CastRadius: 0.2
   m_CastPosition: {fileID: 1907341547}
   m_LayerMask:
