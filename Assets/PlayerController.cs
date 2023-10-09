@@ -8,7 +8,10 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float mf_moveSpeed = 10.0f;
+
     [SerializeField] float mf_jumpForce = 50.0f;
+    [SerializeField] float mf_jumpBufferDist = 1.0f;
+
     [SerializeField] float mf_CastRadius = 0.1f;
     [SerializeField] Transform m_CastPosition;
     [SerializeField] LayerMask m_LayerMask;
@@ -21,14 +24,8 @@ public class PlayerController : MonoBehaviour
     {
         m_rb = GetComponent<Rigidbody2D>();
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+  
+    // Update is called once per frame (Very Expensive)
     void FixedUpdate()
     {
         isGrounded = Physics2D.CircleCast(m_CastPosition.position, mf_CastRadius, Vector2.zero, 0, m_LayerMask);
@@ -37,11 +34,22 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (isGrounded)
+        if (context.performed) 
         {
-            m_rb.AddForce(Vector2.up * mf_jumpForce);
+            if (isGrounded)
+            {
+                m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+                m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+            }
+            else if (Physics2D.Linecast(new Vector3(transform.position.x, transform.position.y, 0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0), m_LayerMask))
+            {
+                m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+                m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+            }
         }
     }
+
+
     public void Move(InputAction.CallbackContext Context)
     {
         if (Context.performed)
@@ -50,7 +58,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Context.canceled)
         {
-            mf_axis = 0;
+           mf_axis = 0;
         }
     }
 
@@ -65,6 +73,8 @@ public class PlayerController : MonoBehaviour
         {
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(m_CastPosition.position, mf_CastRadius);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y,0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0));
         }
     }
 }
