@@ -286,7 +286,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.56}
+  m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -689,8 +689,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 570208904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: -3.6, z: 0}
-  m_LocalScale: {x: 0.80296606, y: 1, z: 1}
+  m_LocalPosition: {x: -0.02, y: -3.5887, z: 0}
+  m_LocalScale: {x: 0.80296606, y: 1.0514, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1012,7 +1012,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 0.4
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -1131,7 +1131,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1693285881}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.18, y: -2.13, z: 0}
+  m_LocalPosition: {x: -1.033, y: -3.233, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1153,7 +1153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: cce6a012620c55f4fab9939be231eea5, type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -1214,10 +1214,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 374d99563afbbb741bbbe32e5e2b0030, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PlayerInput: {fileID: 1693285886}
   mf_moveSpeed: 5
   mf_jumpForce: 6.5
   mf_jumpBufferTime: 1
-  mf_cyoteTime: 0.25
+  mf_coyoteTime: 0.25
   mf_CastRadius: 0.2
   m_CastPosition: {fileID: 1907341547}
   m_LayerMask:
