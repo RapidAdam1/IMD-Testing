@@ -987,8 +987,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1693285885}
-  - component: {fileID: 1693285884}
   - component: {fileID: 1693285887}
+  - component: {fileID: 1693285884}
   - component: {fileID: 1693285886}
   - component: {fileID: 1693285883}
   - component: {fileID: 1693285882}
@@ -1217,7 +1217,6 @@ MonoBehaviour:
   m_PlayerInput: {fileID: 1693285886}
   mf_moveSpeed: 5
   mf_jumpForce: 6.5
-  mf_jumpBufferTime: 1
   mf_coyoteTime: 0.25
   mf_CastRadius: 0.2
   m_CastPosition: {fileID: 1907341547}

@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         m_PlayerInput.actions.FindAction("Jump").performed += Jump;
         m_PlayerInput.actions.FindAction("Move").performed += Handle_MovePerformed;
