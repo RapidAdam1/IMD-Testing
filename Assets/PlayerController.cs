@@ -8,7 +8,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float mf_moveSpeed = 10.0f;
+
     [SerializeField] float mf_jumpForce = 50.0f;
+    [SerializeField] float mf_jumpBufferTime = 0.2f;
+    [SerializeField] float mf_cyoteTime = 0.25f;
+
     [SerializeField] float mf_CastRadius = 0.1f;
     [SerializeField] Transform m_CastPosition;
     [SerializeField] LayerMask m_LayerMask;
@@ -17,18 +21,15 @@ public class PlayerController : MonoBehaviour
     bool isGrounded;
     float mf_axis;
 
+    bool CyoteTime = false;
+    bool JumpBuffer = false;
+
     private void Awake()
     {
         m_rb = GetComponent<Rigidbody2D>();
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+  
+    // Update is called once per frame (Very Expensive)
     void FixedUpdate()
     {
         isGrounded = Physics2D.CircleCast(m_CastPosition.position, mf_CastRadius, Vector2.zero, 0, m_LayerMask);
@@ -37,11 +38,34 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (isGrounded)
+        if (context.performed)
         {
-            m_rb.AddForce(Vector2.up * mf_jumpForce);
+            if (isGrounded || CyoteTime || JumpBuffer)
+            {
+                m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+                m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+            }
         }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground")
+        {
+            if (m_rb.velocity.y < 0)
+            {
+                CyoteTime = true;
+                StartCoroutine(IE_CyoteTime());
+            }
+        }
+    }
+
+    IEnumerator IE_CyoteTime()
+    {
+        yield return new WaitForSeconds(mf_cyoteTime);
+        CyoteTime = false;
+    }
+
     public void Move(InputAction.CallbackContext Context)
     {
         if (Context.performed)
@@ -50,7 +74,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Context.canceled)
         {
-            mf_axis = 0;
+           mf_axis = 0;
         }
     }
 
@@ -65,6 +89,8 @@ public class PlayerController : MonoBehaviour
         {
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(m_CastPosition.position, mf_CastRadius);
+            Gizmos.color = Color.blue;
+            //Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y,0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0));
         }
     }
 }
