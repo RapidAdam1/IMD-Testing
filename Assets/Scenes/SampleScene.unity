@@ -534,9 +534,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerObject: {fileID: 1693285881}
-  LookAheadXDistance: 1.35
-  LookAheadYDistance: 0.6
-  LookAheadSpeed: 2
+  LookAheadXDistance: 6
+  LookAheadYDistance: 2.5
+  LookAheadSpeed: 4
   OrthoSizeMaxZoom: 8
 --- !u!1 &570208904
 GameObject:
@@ -910,7 +910,7 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
+  m_UseAutoMass: 1
   m_Mass: 1
   m_LinearDrag: 2
   m_AngularDrag: 0.05

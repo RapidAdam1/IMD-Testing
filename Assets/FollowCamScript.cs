@@ -16,8 +16,9 @@ public class FollowCamScript : MonoBehaviour
 
     [SerializeField] float OrthoSizeMaxZoom;
     float DefaultOrthoSize = 5;
-    float DesiredOrthoSize;
+    float DesiredOrthoSize = 5;
 
+    Coroutine CamUpdate;
     private void Awake()
     {
         cam = GetComponent<Camera>();
@@ -28,39 +29,42 @@ public class FollowCamScript : MonoBehaviour
     private void Start()
     {
         DefaultOrthoSize = cam.orthographicSize;
+        CameraHandle(true);
     }
 
-    private void Update()
+    void CameraHandle(bool Update)
     {
-        m_CameraOffset = m_PlayerRb.velocity * new Vector2(LookAheadXDistance,LookAheadYDistance);
-        if(m_PlayerRb.velocity.y > -4)
+        if (CamUpdate == null && Update)
         {
-            m_CameraOffset.y += VerticalOffset;
-            DesiredOrthoSize = DefaultOrthoSize;
+            CamUpdate = StartCoroutine(UpdateCamera());
         }
-        else { DesiredOrthoSize = OrthoSizeMaxZoom; }
-
-        transform.localPosition = Vector3.Lerp(transform.localPosition, m_CameraOffset, LookAheadSpeed * Time.deltaTime);
-        cam.orthographicSize = Mathf.Lerp(cam.orthographicSize,DesiredOrthoSize,2*Time.deltaTime);
+        else
+        {
+            StopCoroutine(UpdateCamera());
+            CamUpdate = null;
+        }
     }
 
-    IEnumerator UpdateCameraOffset()
+    IEnumerator UpdateCamera()
     {
         while (true)
         {
-            LerpValue(1, 2, 4);
-        transform.localPosition = m_CameraOffset;
+            m_CameraOffset.x = Mathf.Clamp(m_PlayerRb.velocity.x * LookAheadXDistance, -LookAheadXDistance, LookAheadXDistance);
+            if (m_PlayerRb.velocity.y < -4)
+            {
+                m_CameraOffset.y = Mathf.Clamp(m_PlayerRb.velocity.y * LookAheadYDistance, -LookAheadYDistance, VerticalOffset);
+                DesiredOrthoSize = OrthoSizeMaxZoom;
+            }
+            else
+            {
+                m_CameraOffset.y = VerticalOffset;
+                DesiredOrthoSize = DefaultOrthoSize;
+            }
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, DesiredOrthoSize, 0.5f * Time.deltaTime);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, m_CameraOffset, LookAheadSpeed * Time.deltaTime);
+            yield return new WaitForEndOfFrame();
         }
-        yield return null;
     }
 
-    void LerpValue(float StartValue, float EndValue, float InTime)
-    {
-        float TempTime = 0;
-        while (TempTime < InTime)
-        {
-            Mathf.Lerp(StartValue, EndValue, TempTime / InTime);
-            TempTime += Time.smoothDeltaTime;
-        }
-    }
+    
 }
