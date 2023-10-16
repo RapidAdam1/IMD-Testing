@@ -21,7 +21,10 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D m_rb;
     bool isGrounded;
+    public bool isMoving;
     float mf_axis;
+
+    [SerializeField] public bool KeyHeld = true;
 
     Coroutine mcr_MoveCoroutine;
 
@@ -52,6 +55,15 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         isGrounded = Physics2D.CircleCast(m_CastPosition.position, mf_CastRadius, Vector2.zero, 0, m_LayerMask);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        IInteractable Interface = collision.GetComponent<IInteractable>();
+        if (Interface != null)
+        {
+            Interface.OnInteract(gameObject);
+        }
     }
 
     public void Jump(InputAction.CallbackContext context)
@@ -85,6 +97,7 @@ public class PlayerController : MonoBehaviour
     private void Handle_MovePerformed(InputAction.CallbackContext context)
     {
         mf_axis = context.ReadValue<float>();
+        isMoving = true;
         if (mcr_MoveCoroutine == null)
         {
             mcr_MoveCoroutine = StartCoroutine(IE_MoveUpdate());
@@ -94,13 +107,13 @@ public class PlayerController : MonoBehaviour
     private void Handle_MoveCancelled(InputAction.CallbackContext context)
     {
         mf_axis = 0;
+        isMoving = false;
         if (mcr_MoveCoroutine != null)
         {
             StopCoroutine(mcr_MoveCoroutine);
             mcr_MoveCoroutine = null;
         }
     }
-
 
     IEnumerator IE_MoveUpdate()
     {

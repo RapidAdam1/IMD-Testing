@@ -8,6 +8,7 @@ public class FollowCamScript : MonoBehaviour
     PlayerController playerController;
     Rigidbody2D m_PlayerRb;
     Camera cam;
+
     [SerializeField] float LookAheadXDistance = 1.3f;
     [SerializeField] float LookAheadYDistance = 0.5f;
     [SerializeField] float LookAheadSpeed = 2.0f;
@@ -38,7 +39,7 @@ public class FollowCamScript : MonoBehaviour
         {
             CamUpdate = StartCoroutine(UpdateCamera());
         }
-        else
+        else if (!Update)
         {
             StopCoroutine(UpdateCamera());
             CamUpdate = null;
@@ -49,7 +50,9 @@ public class FollowCamScript : MonoBehaviour
     {
         while (true)
         {
-            m_CameraOffset.x = Mathf.Clamp(m_PlayerRb.velocity.x * LookAheadXDistance, -LookAheadXDistance, LookAheadXDistance);
+            if (playerController.isMoving) { m_CameraOffset.x = Mathf.Clamp(m_PlayerRb.velocity.x * LookAheadXDistance, -LookAheadXDistance, LookAheadXDistance); }
+            else m_CameraOffset.x = 0;
+
             if (m_PlayerRb.velocity.y < -4)
             {
                 m_CameraOffset.y = Mathf.Clamp(m_PlayerRb.velocity.y * LookAheadYDistance, -LookAheadYDistance, VerticalOffset);
