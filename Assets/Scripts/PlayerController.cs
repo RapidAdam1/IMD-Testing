@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
             if (bJumpBuffer)
             {
                 //Do Jump
+                Debug.Log("JUMP PLEASE");
             }
         }
     }
@@ -134,7 +135,6 @@ public class PlayerController : MonoBehaviour
     {
         StartCoroutine(IE_CoyoteTime());
         
-
          while(!isGrounded)
          {
             //WallCollision Checks
