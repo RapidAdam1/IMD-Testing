@@ -20,16 +20,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask m_LayerMask;
 
     Rigidbody2D m_rb;
-    bool isGrounded;
     public bool isMoving;
     float mf_axis;
 
+    bool isGrounded;
+    bool bJumpBuffer;
+    float fJumpBufferTime = 0.5f;
+
     [SerializeField] public bool KeyHeld = true;
 
-    Coroutine mcr_MoveCoroutine;
+    Coroutine mcr_Move;
+    Coroutine mcr_JumpBuff;
+    Coroutine mcr_Fall;
 
-    bool CoyoteTime = false;
-    bool JumpBuffer = false;
+    bool bCoyoteTime = false;
 
     private void Awake()
     {
@@ -49,6 +53,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Jump").performed -= Jump;
         m_PlayerInput.actions.FindAction("Move").performed -= Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Move").canceled -= Handle_MoveCancelled;
+        StopAllCoroutines();
     }
 
     // Update is called once per frame (Very Expensive)
@@ -57,6 +62,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics2D.CircleCast(m_CastPosition.position, mf_CastRadius, Vector2.zero, 0, m_LayerMask);
     }
 
+    #region Interafaces
     private void OnTriggerEnter2D(Collider2D collision)
     {
         IInteractable Interface = collision.GetComponent<IInteractable>();
@@ -65,13 +71,19 @@ public class PlayerController : MonoBehaviour
             Interface.OnInteract(gameObject);
         }
     }
+    #endregion
 
-    public void Jump(InputAction.CallbackContext context)
+
+    public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isGrounded || CoyoteTime || JumpBuffer)
+        if (collision.collider.tag == "Ground")
         {
-            m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
-            m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+            StopCoroutine(IE_AirChecks());
+            mcr_Fall = null;
+            if (bJumpBuffer)
+            {
+                //Do Jump
+            }
         }
     }
 
@@ -79,28 +91,66 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if (m_rb.velocity.y < 0)
+            if(mcr_Fall == null)
             {
-                CoyoteTime = true;
-                StartCoroutine(IE_CoyoteTime());
+                mcr_Fall = StartCoroutine(IE_AirChecks());
             }
-            else { CoyoteTime = false;}
         }
+    } 
+    
+    public void Jump(InputAction.CallbackContext context)
+    {
+        if (isGrounded || bCoyoteTime)
+        {
+            m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+            m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            mcr_JumpBuff = StartCoroutine(IE_JumpBuffer());
+        }
+    }
+    
+
+    IEnumerator IE_JumpBuffer()
+    {
+        bJumpBuffer = true;
+        yield return new WaitForSeconds(fJumpBufferTime);
+        bJumpBuffer = false;
+        yield break;
     }
 
     IEnumerator IE_CoyoteTime()
     {
-        yield return new WaitForSeconds(mf_coyoteTime);
-        CoyoteTime = false;
+        if(m_rb.velocity.y < 0)
+        {
+            bCoyoteTime = true;
+            yield return new WaitForSeconds(mf_coyoteTime);
+            bCoyoteTime = false;
+        }
+        yield break;
+    }
+    IEnumerator IE_AirChecks()
+    {
+        StartCoroutine(IE_CoyoteTime());
+        
+
+         while(!isGrounded)
+         {
+            //WallCollision Checks
+            yield return new WaitForEndOfFrame();
+         }
+        yield break;
     }
 
+    #region Movement Handle
     private void Handle_MovePerformed(InputAction.CallbackContext context)
     {
         mf_axis = context.ReadValue<float>();
         isMoving = true;
-        if (mcr_MoveCoroutine == null)
+        if (mcr_Move == null)
         {
-            mcr_MoveCoroutine = StartCoroutine(IE_MoveUpdate());
+            mcr_Move = StartCoroutine(IE_MoveUpdate());
         }
     }
 
@@ -108,10 +158,10 @@ public class PlayerController : MonoBehaviour
     {
         mf_axis = 0;
         isMoving = false;
-        if (mcr_MoveCoroutine != null)
+        if (mcr_Move != null)
         {
-            StopCoroutine(mcr_MoveCoroutine);
-            mcr_MoveCoroutine = null;
+            StopCoroutine(mcr_Move);
+            mcr_Move = null;
         }
     }
 
@@ -123,7 +173,9 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
+    #endregion
 
+    #region Debug Tools
     private void OnDrawGizmos()
     {
         if (isGrounded)
@@ -139,4 +191,5 @@ public class PlayerController : MonoBehaviour
             //Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y,0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0));
         }
     }
+    #endregion
 }
