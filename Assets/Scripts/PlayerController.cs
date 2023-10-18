@@ -12,10 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mf_moveSpeed = 10.0f;
 
     [SerializeField] float mf_jumpForce = 50.0f;
-    //[SerializeField] float mf_jumpBufferTime = 0.2f;
-    [SerializeField] float mf_coyoteTime = 0.25f;
 
-    [SerializeField] float mf_CastRadius = 0.1f;
     [SerializeField] Transform m_CastPosition;
     [SerializeField] LayerMask m_LayerMask;
 
@@ -25,7 +22,8 @@ public class PlayerController : MonoBehaviour
 
     bool isGrounded;
     bool bJumpBuffer;
-    float fJumpBufferTime = 0.5f;
+    float mf_coyoteTime = 0.2f;
+    float fJumpBufferTime = 0.15f;
 
     [SerializeField] public bool KeyHeld = true;
 
@@ -59,7 +57,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame (Very Expensive)
     void FixedUpdate()
     {
-        isGrounded = Physics2D.CircleCast(m_CastPosition.position, mf_CastRadius, Vector2.zero, 0, m_LayerMask);
+        isGrounded = Physics2D.BoxCast(m_CastPosition.position, new Vector2(1, 0.1f), 0, Vector2.zero, 0, m_LayerMask);
     }
 
     #region Interafaces
@@ -82,8 +80,8 @@ public class PlayerController : MonoBehaviour
             mcr_Fall = null;
             if (bJumpBuffer)
             {
-                //Do Jump
-                Debug.Log("JUMP PLEASE");
+                m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+                m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
             }
         }
     }
@@ -92,7 +90,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if(mcr_Fall == null)
+            if(mcr_Fall == null && isActiveAndEnabled)
             {
                 mcr_Fall = StartCoroutine(IE_AirChecks());
             }
@@ -115,8 +113,11 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_JumpBuffer()
     {
+        if(Physics2D.Linecast(m_CastPosition.position,m_CastPosition.position - Vector3.down,m_LayerMask))
+        {
         bJumpBuffer = true;
         yield return new WaitForSeconds(fJumpBufferTime);
+        }
         bJumpBuffer = false;
         yield break;
     }
@@ -178,17 +179,19 @@ public class PlayerController : MonoBehaviour
     #region Debug Tools
     private void OnDrawGizmos()
     {
-        if (isGrounded)
+        Gizmos.DrawLine(m_CastPosition.position, m_CastPosition.position - Vector3.up);
+
+            if (isGrounded)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(m_CastPosition.position, mf_CastRadius);
+            Gizmos.DrawCube(m_CastPosition.position,new Vector3(1,0.1f,1));
+
         }
         else
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(m_CastPosition.position, mf_CastRadius);
+            Gizmos.DrawCube(m_CastPosition.position, new Vector3(1, 0.1f, 1));
             Gizmos.color = Color.blue;
-            //Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y,0), new Vector3(transform.position.x, transform.position.y - mf_jumpBufferDist, 0));
         }
     }
     #endregion
