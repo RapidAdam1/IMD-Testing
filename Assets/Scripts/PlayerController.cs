@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-
+    #region Colliders
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.tag == "Ground")
@@ -111,6 +111,9 @@ public class PlayerController : MonoBehaviour
         return Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.1f), 0, Vector2.zero, 0, m_LayerMask);
     }
 
+    #endregion
+
+    #region Jumping
     void Jump(InputAction.CallbackContext context)
     {
         if (context.performed) { InitialJump();}
@@ -169,6 +172,7 @@ public class PlayerController : MonoBehaviour
          }
         yield break;
     }
+    #endregion
 
     #region Movement Handle
     private void Handle_MovePerformed(InputAction.CallbackContext context)
