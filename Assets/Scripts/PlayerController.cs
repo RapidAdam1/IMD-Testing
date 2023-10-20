@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     Coroutine mcr_Move;
     Coroutine mcr_JumpBuff;
     Coroutine mcr_Fall;
+    Coroutine mcr_SlowPlayer;
 
 
     private void Awake()
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
     }
 
+    #region Bindings
     private void OnEnable()
     {
         m_PlayerInput.actions.FindAction("Jump").performed += Jump;
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Move").canceled -= Handle_MoveCancelled;
         StopAllCoroutines();
     }
+    #endregion
 
     #region Interafaces
     private void OnTriggerEnter2D(Collider2D collision)
@@ -127,7 +130,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /*--------------------------Todo-----------------------------*/
     IEnumerator IE_CoyoteTime()
     {
         bCoyoteTime = CoyoteCollisionCheck();
@@ -137,9 +139,13 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator IE_CancelJump()
     {
+        while (m_rb.velocity.y > 0)
+        {
+            m_rb.velocity = new Vector2(m_rb.velocity.x,m_rb.velocity.y - 1);
+            yield return new WaitForFixedUpdate();
+        }
         yield break;
     }
-    /*----------------------------------------------------------*/
 
     IEnumerator IE_JumpBuffer()
     {
@@ -169,6 +175,11 @@ public class PlayerController : MonoBehaviour
     {
         mf_axis = context.ReadValue<float>();
         bisMoving = true;
+        if(mcr_SlowPlayer != null)
+        {
+            StopCoroutine(IE_SlowPlayer());
+            mcr_SlowPlayer = null;
+        }
         if (mcr_Move == null)
         {
             mcr_Move = StartCoroutine(IE_MoveUpdate());
@@ -183,6 +194,10 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(mcr_Move);
             mcr_Move = null;
+            if (mcr_SlowPlayer == null)
+            {
+                mcr_SlowPlayer = StartCoroutine(IE_SlowPlayer());
+            }
         }
     }
 
@@ -193,6 +208,22 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = new Vector2(mf_axis * mf_moveSpeed, m_rb.velocity.y);
             yield return new WaitForFixedUpdate();
         }
+        yield break;
+    }
+
+    IEnumerator IE_SlowPlayer()
+    {
+        while (!GroundCheck())
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        while (m_rb.velocity.x* m_rb.velocity.x > 0.1f)
+        {
+            m_rb.velocity = new Vector2(m_rb.velocity.x / 1.2f, m_rb.velocity.y);
+            yield return new WaitForFixedUpdate();
+        }
+        m_rb.velocity = new Vector2(0,m_rb.velocity.y);
+        yield break;
     }
     #endregion
 
