@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,7 +34,6 @@ public class PlayerController : MonoBehaviour
     Coroutine mcr_JumpBuff;
     Coroutine mcr_Fall;
     Coroutine mcr_SlowPlayer;
-
 
     private void Awake()
     {
@@ -168,6 +168,7 @@ public class PlayerController : MonoBehaviour
          while(!isGrounded)
          {
             bGoingUp = m_rb.velocity.y > 0;
+
             yield return new WaitForEndOfFrame();
          }
         yield break;
@@ -189,7 +190,7 @@ public class PlayerController : MonoBehaviour
             mcr_Move = StartCoroutine(IE_MoveUpdate());
         }
     }
-
+     
     private void Handle_MoveCancelled(InputAction.CallbackContext context)
     {
         mf_axis = 0;
@@ -234,14 +235,19 @@ public class PlayerController : MonoBehaviour
     #region Debug Tools
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(m_CastPosition.position, m_CastPosition.position - Vector3.up);
+        //Line To Ground (Unused)
+        //Gizmos.DrawLine(m_CastPosition.position, m_CastPosition.position - Vector3.up);
+
 
         if (isGrounded) { Gizmos.color = Color.red; }
         else { Gizmos.color = Color.green; }
         Gizmos.DrawCube(m_CastPosition.position,new Vector3(0.9f,0.1f,1));
+        
+        /*
+        //Coyote Time Cast
         Gizmos.color = Color.yellow;
         Gizmos.DrawCube(m_CastPosition.position + new Vector3(0,1f), new Vector2(1.5f, 1.3f));
-
+        */
     }
     #endregion
 };
