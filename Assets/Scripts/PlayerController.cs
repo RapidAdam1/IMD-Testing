@@ -9,7 +9,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     PlayerInput m_PlayerInput;
-    Rigidbody2D m_rb;
+    public Rigidbody2D m_rb;
+    public Collider2D m_collider;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
 
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
+        m_collider = GetComponent<Collider2D>();
     }
 
     #region Bindings
@@ -108,7 +110,13 @@ public class PlayerController : MonoBehaviour
     }
     bool GroundCheck()
     {
-        return Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.1f), 0, Vector2.zero, 0, m_LayerMask);
+        bool ground;
+        if (ground = Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.1f), 0, Vector2.zero, 0, m_LayerMask)) 
+        { 
+            m_collider.enabled = true; 
+            if(mf_axis == 0) { m_rb.velocity = new Vector2(0, m_rb.velocity.y); }
+        }
+        return ground;
     }
 
     #endregion
@@ -164,11 +172,13 @@ public class PlayerController : MonoBehaviour
     IEnumerator IE_AirChecks()
     {
         bGoingUp = m_rb.velocity.y > 0;
+        m_collider.enabled = false;
+
         StartCoroutine(IE_CoyoteTime());
          while(!isGrounded)
          {
             bGoingUp = m_rb.velocity.y > 0;
-
+            if(!bGoingUp) {m_collider.enabled = true;}
             yield return new WaitForEndOfFrame();
          }
         yield break;
