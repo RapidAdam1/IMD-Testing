@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask m_LayerMask;
 
     public bool bisMoving;
-    [SerializeField] bool bGoingUp;
+    [SerializeField] public bool bGoingUp;
     [SerializeField] bool bJumpBuffer;
     [SerializeField] bool bCoyoteTime = false;
     float mf_axis;
@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+
     #region Colliders
     public void OnCollisionEnter2D(Collision2D collision)
     {
@@ -84,11 +85,12 @@ public class PlayerController : MonoBehaviour
             {
                 StopCoroutine(IE_AirChecks());
                 mcr_Fall = null;
+                if (bJumpBuffer)
+                {
+                    InitialJump();
+                }
             }
-            if (bJumpBuffer)
-            {
-                InitialJump();
-            }
+
         }
     }
 
@@ -96,7 +98,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if(mcr_Fall == null && isActiveAndEnabled)
+            if(mcr_Fall == null && isActiveAndEnabled && isGrounded)
             {
                 mcr_Fall = StartCoroutine(IE_AirChecks());
             }
@@ -110,13 +112,7 @@ public class PlayerController : MonoBehaviour
     }
     bool GroundCheck()
     {
-        bool ground;
-        if (ground = Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.1f), 0, Vector2.zero, 0, m_LayerMask)) 
-        { 
-            m_collider.enabled = true; 
-            if(mf_axis == 0) { m_rb.velocity = new Vector2(0, m_rb.velocity.y); }
-        }
-        return ground;
+        return Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
     }
 
     #endregion
@@ -131,6 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded = GroundCheck() || bCoyoteTime)
         {
+            m_collider.enabled = false;
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
@@ -171,14 +168,11 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_AirChecks()
     {
-        bGoingUp = m_rb.velocity.y > 0;
-        m_collider.enabled = false;
-
+        bGoingUp = m_rb.velocity.y > 0.2f;
         StartCoroutine(IE_CoyoteTime());
          while(!isGrounded)
          {
-            bGoingUp = m_rb.velocity.y > 0;
-            if(!bGoingUp) {m_collider.enabled = true;}
+            bGoingUp = m_rb.velocity.y > +0.5f;
             yield return new WaitForEndOfFrame();
          }
         yield break;
@@ -251,7 +245,7 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded) { Gizmos.color = Color.red; }
         else { Gizmos.color = Color.green; }
-        Gizmos.DrawCube(m_CastPosition.position,new Vector3(0.9f,0.1f,1));
+        Gizmos.DrawCube(m_CastPosition.position,new Vector3(0.9f,0.2f,1));
         
         /*
         //Coyote Time Cast

@@ -16,16 +16,24 @@ public class CornerCorrection : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Ground" && !PC.m_collider.enabled )
+        if(collision.tag == "Ground" && !PC.m_collider.enabled && PC.m_rb.velocity.y > 1)
         {
             if (collision.IsTouching(LeftCollider))
-            {            
+            {
+                PC.m_rb.AddForce(Vector2.right * 100);
+
                 StartCoroutine(DelayCollider());
             }
             else if(collision.IsTouching(RightCollider)) 
             {
+                PC.m_rb.AddForce(Vector2.left * 100);
                 StartCoroutine(DelayCollider());
+                
             }
+        }
+        else if (collision.tag =="Ground")
+        {
+            PC.m_collider.enabled = true;
         }
     }
 
