@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
 {
     PlayerInput m_PlayerInput;
     public Rigidbody2D m_rb;
-    public Collider2D m_collider;
+    Collider2D m_collider;
+    GameObject m_collider_owner;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
 
@@ -40,7 +41,8 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
-        m_collider = GetComponent<Collider2D>();
+        m_collider = GetComponentInChildren<Collider2D>();
+        m_collider_owner = m_collider.gameObject;
     }
 
     #region Bindings
@@ -98,13 +100,12 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if(mcr_Fall == null && isActiveAndEnabled && isGrounded)
+            if(mcr_Fall == null)
             {
                 mcr_Fall = StartCoroutine(IE_AirChecks());
             }
         }
     }
-
 
     bool CoyoteCollisionCheck()
     {
@@ -114,6 +115,10 @@ public class PlayerController : MonoBehaviour
     {
         return Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
     }
+    bool CeilingCollision()
+    {
+        return Physics2D.BoxCast(m_CastPosition.position + Vector3.up, new Vector2(0.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
+    }
 
     #endregion
 
@@ -121,13 +126,12 @@ public class PlayerController : MonoBehaviour
     void Jump(InputAction.CallbackContext context)
     {
         if (context.performed) { InitialJump();}
-        else if (m_rb.velocity.y > 0) { StartCoroutine(IE_CancelJump()); }
+        else if (m_rb.velocity.y > 1) { StartCoroutine(IE_CancelJump()); }
     }
     void InitialJump()
     {
         if (isGrounded = GroundCheck() || bCoyoteTime)
         {
-            m_collider.enabled = false;
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
@@ -147,7 +151,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator IE_CancelJump()
     {
-        while (m_rb.velocity.y > 0)
+        while (m_rb.velocity.y > 1)
         {
             m_rb.velocity = new Vector2(m_rb.velocity.x,m_rb.velocity.y - 1);
             yield return new WaitForFixedUpdate();
@@ -172,7 +176,8 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(IE_CoyoteTime());
          while(!isGrounded)
          {
-            bGoingUp = m_rb.velocity.y > +0.5f;
+            if (CeilingCollision()) {m_collider.enabled = true;}
+            bGoingUp = m_rb.velocity.y > 0.5f;
             yield return new WaitForEndOfFrame();
          }
         yield break;
@@ -246,7 +251,8 @@ public class PlayerController : MonoBehaviour
         if (isGrounded) { Gizmos.color = Color.red; }
         else { Gizmos.color = Color.green; }
         Gizmos.DrawCube(m_CastPosition.position,new Vector3(0.9f,0.2f,1));
-        
+        Gizmos.DrawCube(m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f,1));
+
         /*
         //Coyote Time Cast
         Gizmos.color = Color.yellow;

@@ -14,7 +14,7 @@ public class CornerCorrection : MonoBehaviour
     {
        PC = GetComponentInParent<PlayerController>();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+   /* private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Ground" && !PC.m_collider.enabled && PC.m_rb.velocity.y > 1)
         {
@@ -41,5 +41,5 @@ public class CornerCorrection : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f);
         PC.m_collider.enabled = true;
-    }
+    }*/
 }
