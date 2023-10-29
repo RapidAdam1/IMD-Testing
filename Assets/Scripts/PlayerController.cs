@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if(mcr_Fall == null)
+            if(mcr_Fall == null && this.isActiveAndEnabled)
             {
                 mcr_Fall = StartCoroutine(IE_AirChecks());
             }

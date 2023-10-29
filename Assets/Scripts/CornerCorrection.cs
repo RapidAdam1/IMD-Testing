@@ -9,20 +9,6 @@ public class CornerCorrection : MonoBehaviour
     [SerializeField] Collider2D T_Left;
     [SerializeField] Collider2D T_Right;
 
-    [SerializeField] Collider2D C_Bottom;
-
-    enum FallState
-    {
-        Grounded,
-        Falling,
-        Rising
-    }
-    enum MoveState
-    {
-        Left,
-        Right
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Ground")
