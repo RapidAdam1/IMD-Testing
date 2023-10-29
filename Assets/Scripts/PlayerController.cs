@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
         {
             if (GroundCheck()) 
             {
+                m_collider.enabled = true;
                 StopCoroutine(IE_AirChecks());
                 mcr_Fall = null;
                 if (bJumpBuffer)
@@ -120,7 +121,7 @@ public class PlayerController : MonoBehaviour
     }
     bool GroundCheck()
     {
-        return Physics2D.BoxCast(m_CastPosition.position, new Vector2(0.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
+        return Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
     }
     bool CeilingCollision()
     {
@@ -143,7 +144,6 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
             m_collider.enabled = false;
-            CollTrigger.RisingCollider();
         }
         else
         {
@@ -185,14 +185,13 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(IE_CoyoteTime());
          while(!isGrounded)
          {
-            if (bGoingUp = m_rb.velocity.y >= 1f)
+            if (bGoingUp = m_rb.velocity.y >= 2f)
             {
                 m_collider.enabled = false;
-                CollTrigger.RisingCollider();
             }
             else
             {
-                CollTrigger.FallingCollider();
+                m_collider.enabled = true;
             }
 
             yield return new WaitForEndOfFrame();
@@ -246,7 +245,7 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded) { Gizmos.color = Color.red; }
         else { Gizmos.color = Color.green; }
-        Gizmos.DrawCube(m_CastPosition.position,new Vector3(0.9f,0.2f,1));
+        Gizmos.DrawCube(m_CastPosition.position,new Vector3(.9f,0.2f,1));
         Gizmos.DrawCube(m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f,1));
 
         /*
