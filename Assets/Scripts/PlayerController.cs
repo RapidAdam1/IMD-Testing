@@ -10,8 +10,9 @@ public class PlayerController : MonoBehaviour
 {
     PlayerInput m_PlayerInput;
     public Rigidbody2D m_rb;
+
     Collider2D m_collider;
-    GameObject m_collider_owner;
+    CornerCorrection CollTrigger;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
 
@@ -41,8 +42,8 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
-        m_collider = GetComponentInChildren<Collider2D>();
-        m_collider_owner = m_collider.gameObject;
+        m_collider = m_rb.GetComponent<Collider2D>();
+        CollTrigger = GetComponentInChildren<CornerCorrection>();
     }
 
     #region Bindings
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
 
         m_PlayerInput.actions.FindAction("Move").performed += Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Move").canceled += Handle_MoveCancelled;
+
     }
 
     private void OnDisable()
@@ -81,6 +83,9 @@ public class PlayerController : MonoBehaviour
 
 
     #region Colliders
+
+    public void EnabledCollider(bool enabled) { m_collider.enabled = enabled; }
+
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.tag == "Ground")
@@ -137,6 +142,8 @@ public class PlayerController : MonoBehaviour
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+            m_collider.enabled = false;
+            CollTrigger.RisingCollider();
         }
         else
         {
@@ -174,12 +181,20 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_AirChecks()
     {
-        bGoingUp = m_rb.velocity.y > 0.2f;
+        bGoingUp = m_rb.velocity.y >= 1f;
         StartCoroutine(IE_CoyoteTime());
          while(!isGrounded)
          {
-            if (CeilingCollision()) {m_collider.enabled = true;}
-            bGoingUp = m_rb.velocity.y > 0.5f;
+            if (bGoingUp = m_rb.velocity.y >= 1f)
+            {
+                m_collider.enabled = false;
+                CollTrigger.RisingCollider();
+            }
+            else
+            {
+                CollTrigger.FallingCollider();
+            }
+
             yield return new WaitForEndOfFrame();
          }
         yield break;
@@ -192,11 +207,6 @@ public class PlayerController : MonoBehaviour
     {
         mf_axis = context.ReadValue<float>();
         bisMoving = true;
-        if(mcr_SlowPlayer != null)
-        {
-            StopCoroutine(IE_SlowPlayer());
-            mcr_SlowPlayer = null;
-        }
         if (mcr_Move == null)
         {
             mcr_Move = StartCoroutine(IE_MoveUpdate());
@@ -209,12 +219,9 @@ public class PlayerController : MonoBehaviour
         bisMoving = false;
         if (mcr_Move != null)
         {
+            m_rb.velocity = new Vector2(0, m_rb.velocity.y);
             StopCoroutine(mcr_Move);
             mcr_Move = null;
-            if (mcr_SlowPlayer == null)
-            {
-                mcr_SlowPlayer = StartCoroutine(IE_SlowPlayer());
-            }
         }
     }
 
@@ -228,20 +235,6 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    IEnumerator IE_SlowPlayer()
-    {
-        while (!GroundCheck())
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        while (m_rb.velocity.x* m_rb.velocity.x > 0.1f)
-        {
-            m_rb.velocity = new Vector2(m_rb.velocity.x / 1.2f, m_rb.velocity.y);
-            yield return new WaitForFixedUpdate();
-        }
-        m_rb.velocity = new Vector2(0,m_rb.velocity.y);
-        yield break;
-    }
     #endregion
 
     #region Debug Tools
