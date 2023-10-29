@@ -185,6 +185,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(IE_CoyoteTime());
          while(!isGrounded)
          {
+            m_rb.velocity = new Vector2(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -6f, 100));
             if (bGoingUp = m_rb.velocity.y >= 2f)
             {
                 m_collider.enabled = false;
