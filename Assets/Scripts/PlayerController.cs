@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Jump").performed += Jump;
         m_PlayerInput.actions.FindAction("Jump").canceled += Jump;
 
+
         m_PlayerInput.actions.FindAction("Move").performed += Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Move").canceled += Handle_MoveCancelled;
     }
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput.actions.FindAction("Jump").performed -= Jump;
         m_PlayerInput.actions.FindAction("Jump").canceled -= Jump;
+
 
         m_PlayerInput.actions.FindAction("Move").performed -= Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Move").canceled -= Handle_MoveCancelled;
@@ -185,6 +187,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Movement Handle
+
     private void Handle_MovePerformed(InputAction.CallbackContext context)
     {
         mf_axis = context.ReadValue<float>();
