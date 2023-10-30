@@ -1,8 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+//https://essssam.itch.io/rocky-roads
 
 [RequireComponent(typeof(Rigidbody2D))]
 
@@ -12,38 +12,51 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D m_rb;
 
     Collider2D m_collider;
-    CornerCorrection CollTrigger;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
-
     [SerializeField] float mf_jumpForce = 10.0f;
+    [SerializeField] float mf_DashForce = 10.0f;
+
 
     [SerializeField] Transform m_CastPosition;
     [SerializeField] LayerMask m_LayerMask;
 
     public bool bisMoving;
-    [SerializeField] public bool bGoingUp;
-    [SerializeField] bool bJumpBuffer;
-    [SerializeField] bool bCoyoteTime = false;
-    float mf_axis;
+    bool MovementLocked = false;
 
+    bool bJumpBuffer;
+    bool bCoyoteTime;
     bool isGrounded;
+
+    float mf_axis;
+    float mf_Vert;
     float mf_coyoteTime = 0.2f;
     float mf_JumpBufferTime = 0.25f;
 
-    [SerializeField] public bool KeyHeld = true;
+    public bool KeyHeld = true;
 
     Coroutine mcr_Move;
     Coroutine mcr_JumpBuff;
     Coroutine mcr_Fall;
-    Coroutine mcr_SlowPlayer;
+
+    [SerializeField] bool IsMoving;
+    [SerializeField] bool IsFalling;
+    [SerializeField] bool JumpBuff;
+
+
+    private void Update()
+    {
+        IsFalling = mcr_Fall != null;
+        JumpBuff = mcr_JumpBuff != null;
+        IsMoving = mcr_Move != null;
+
+    }
 
     private void Awake()
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
         m_collider = m_rb.GetComponent<Collider2D>();
-        CollTrigger = GetComponentInChildren<CornerCorrection>();
     }
 
     #region Bindings
@@ -51,6 +64,10 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput.actions.FindAction("Jump").performed += Jump;
         m_PlayerInput.actions.FindAction("Jump").canceled += Jump;
+
+        m_PlayerInput.actions.FindAction("Dash").performed += Dash;
+        m_PlayerInput.actions.FindAction("Vertical").performed += VerticalRead;
+        m_PlayerInput.actions.FindAction("Vertical").canceled += VerticalRead;
 
 
         m_PlayerInput.actions.FindAction("Move").performed += Handle_MovePerformed;
@@ -62,6 +79,11 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput.actions.FindAction("Jump").performed -= Jump;
         m_PlayerInput.actions.FindAction("Jump").canceled -= Jump;
+
+        m_PlayerInput.actions.FindAction("Dash").performed -= Dash;
+        m_PlayerInput.actions.FindAction("Vertical").performed -= VerticalRead;
+        m_PlayerInput.actions.FindAction("Vertical").canceled -= VerticalRead;
+
 
 
         m_PlayerInput.actions.FindAction("Move").performed -= Handle_MovePerformed;
@@ -90,11 +112,15 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if (GroundCheck()) 
+            if (isGrounded = GroundCheck()) 
             {
                 m_collider.enabled = true;
-                StopCoroutine(IE_AirChecks());
-                mcr_Fall = null;
+
+                if(mcr_Fall != null)
+                {
+                    StopCoroutine(IE_AirChecks());
+                    mcr_Fall = null;
+                }
                 if (bJumpBuffer)
                 {
                     InitialJump();
@@ -108,7 +134,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
-            if(mcr_Fall == null && this.isActiveAndEnabled)
+            if(mcr_Fall == null)
             {
                 mcr_Fall = StartCoroutine(IE_AirChecks());
             }
@@ -121,13 +147,22 @@ public class PlayerController : MonoBehaviour
     }
     bool GroundCheck()
     {
-        return Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
+        bool Ground = Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
+        if(Ground)
+        {
+            if(mcr_Fall != null)
+            {
+                StopCoroutine (IE_AirChecks());
+                mcr_Fall = null;
+            }
+            if(mcr_JumpBuff != null)
+            {
+                StopCoroutine(IE_JumpBuffer());
+                mcr_JumpBuff = null;
+            }
+        }
+        return Ground;
     }
-    bool CeilingCollision()
-    {
-        return Physics2D.BoxCast(m_CastPosition.position + Vector3.up, new Vector2(0.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
-    }
-
     #endregion
 
     #region Jumping
@@ -144,6 +179,13 @@ public class PlayerController : MonoBehaviour
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
             m_collider.enabled = false;
+
+            if(mcr_Fall == null) 
+            {
+                
+                mcr_Fall = StartCoroutine(IE_AirChecks()); 
+            }
+
         }
         else
         {
@@ -181,12 +223,12 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_AirChecks()
     {
-        bGoingUp = m_rb.velocity.y >= 1f;
         StartCoroutine(IE_CoyoteTime());
-         while(!isGrounded)
+        while (!GroundCheck())
          {
-            m_rb.velocity = new Vector2(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -6f, 100));
-            if (bGoingUp = m_rb.velocity.y >= 2f)
+            //SpeedApex
+            m_rb.velocity = new Vector2(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -6.2f, 100));
+            if (m_rb.velocity.y >= 2f)
             {
                 m_collider.enabled = false;
             }
@@ -220,22 +262,57 @@ public class PlayerController : MonoBehaviour
         if (mcr_Move != null)
         {
             m_rb.velocity = new Vector2(0, m_rb.velocity.y);
-            StopCoroutine(mcr_Move);
-            mcr_Move = null;
+            if (mcr_Move != null)
+            {
+                StopCoroutine(mcr_Move);
+                mcr_Move = null;
+            }
         }
     }
-
     IEnumerator IE_MoveUpdate()
     {
         while (mf_axis != 0)
         {
+            if(!MovementLocked)
+            {
             m_rb.velocity = new Vector2(mf_axis * mf_moveSpeed, m_rb.velocity.y);
+
+            }
             yield return new WaitForFixedUpdate();
         }
         yield break;
     }
 
+    void VerticalRead(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            mf_Vert = context.ReadValue<float>();
+        }
+        else if(context.canceled){ mf_Vert = 0; }
+    }
+    void Dash(InputAction.CallbackContext context)
+    {
+        if (mf_axis != 0 || mf_Vert != 0)
+        {
+            m_rb.velocity = new Vector2(0, 0);
+            m_rb.AddForce(new Vector2(mf_axis, mf_Vert/2) * mf_DashForce, ForceMode2D.Impulse);
+            StartCoroutine(IE_Dash());
+        }
+    }
     #endregion
+
+    IEnumerator IE_Dash()
+    {
+        MovementLocked = true;
+        m_rb.gravityScale = 0;
+        yield return new WaitForSeconds(0.15f);
+        m_rb.velocity = new Vector2(0, m_rb.velocity.y);
+        MovementLocked = false;
+        m_rb.gravityScale = 1;
+
+        yield break;
+    }
 
     #region Debug Tools
     private void OnDrawGizmos()
