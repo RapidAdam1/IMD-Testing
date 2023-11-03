@@ -11,11 +11,14 @@ public class CornerCorrection : MonoBehaviour
     [SerializeField] Collider2D T_Right;
     PlayerController controller;
     [SerializeField] Collider2D T_Bottom;
+    [SerializeField] GameObject RayStart;
+    [SerializeField] LayerMask m_LayerMask;
     [SerializeField] GameObject player;
 
     private void Awake()
     {
         controller = GetComponentInParent<PlayerController>();
+
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -23,11 +26,14 @@ public class CornerCorrection : MonoBehaviour
         {
             if (collision.IsTouching(T_Left) && controller.IsPlayerRising())
             {
-                player.transform.position += Vector3.right / 3;
+                Debug.Log("LEFT");
+                player.transform.position += CalcDistanceFromWall(-1);
             }
             else if (collision.IsTouching(T_Right) && controller.IsPlayerRising())
             {
-                player.transform.position += Vector3.left / 3;
+                Debug.Log("Right");
+
+                player.transform.position += CalcDistanceFromWall(1);
 
             }
             else if (collision.IsTouching(T_Bottom))
@@ -36,6 +42,14 @@ public class CornerCorrection : MonoBehaviour
             }
         }
 
+    }
+
+    Vector3 CalcDistanceFromWall(int Direction)
+    {
+        RaycastHit2D Ray = Physics2D.Raycast(RayStart.transform.position, new Vector2(100 * Direction, 0), 1, m_LayerMask);
+        Vector2 Dist = new Vector2(-Direction*Ray.distance, 0);
+
+        return Dist;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
