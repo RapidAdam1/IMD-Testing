@@ -10,13 +10,13 @@ public class PlayerController : MonoBehaviour
 {
     PlayerInput m_PlayerInput;
     public Rigidbody2D m_rb;
-
-    Collider2D m_collider;
+    CornerCorrection CC;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
     [SerializeField] float mf_jumpForce = 10.0f;
     [SerializeField] float mf_DashForce = 10.0f;
-
+    [SerializeField] int m_DashCount = 1;
+    int m_Dashes = 1;
 
     [SerializeField] Transform m_CastPosition;
     [SerializeField] LayerMask m_LayerMask;
@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     bool bJumpBuffer;
     bool bCoyoteTime;
     bool isGrounded;
+    bool isRising; public bool IsPlayerRising() { return isRising; }
 
     float mf_axis;
     float mf_Vert;
@@ -39,14 +40,12 @@ public class PlayerController : MonoBehaviour
     Coroutine mcr_JumpBuff;
     Coroutine mcr_Fall;
 
-    [SerializeField] bool IsMoving;
-    [SerializeField] bool IsFalling;
-    [SerializeField] bool JumpBuff;
+    bool IsMoving;
+    bool JumpBuff;
 
 
     private void Update()
     {
-        IsFalling = mcr_Fall != null;
         JumpBuff = mcr_JumpBuff != null;
         IsMoving = mcr_Move != null;
 
@@ -56,7 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
-        m_collider = m_rb.GetComponent<Collider2D>();
+        CC=GetComponentInChildren<CornerCorrection>();
     }
 
     #region Bindings
@@ -106,38 +105,36 @@ public class PlayerController : MonoBehaviour
 
     #region Colliders
 
-    public void EnabledCollider(bool enabled) { m_collider.enabled = enabled; }
+ 
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void OnGrounded()
     {
-        if (collision.collider.tag == "Ground")
+        m_Dashes = m_DashCount;
+
+        if (bJumpBuffer)
         {
-            if (isGrounded = GroundCheck()) 
-            {
-                m_collider.enabled = true;
-
-                if(mcr_Fall != null)
-                {
-                    StopCoroutine(IE_AirChecks());
-                    mcr_Fall = null;
-                }
-                if (bJumpBuffer)
-                {
-                    InitialJump();
-                }
-            }
-
+            InitialJump();
         }
+        if (mcr_Fall != null)
+        {
+            StopCoroutine(IE_AirChecks());
+            mcr_Fall = null;
+        }
+        if (mcr_JumpBuff != null)
+        {
+            StopCoroutine(IE_JumpBuffer());
+            mcr_JumpBuff = null;
+        }
+
+        CC.EnableMainCollider(true);
+
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    public void StartFall()
     {
-        if (collision.collider.tag == "Ground")
+        if (mcr_Fall == null)
         {
-            if(mcr_Fall == null)
-            {
-                mcr_Fall = StartCoroutine(IE_AirChecks());
-            }
+            mcr_Fall = StartCoroutine(IE_AirChecks());
         }
     }
 
@@ -150,16 +147,7 @@ public class PlayerController : MonoBehaviour
         bool Ground = Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
         if(Ground)
         {
-            if(mcr_Fall != null)
-            {
-                StopCoroutine (IE_AirChecks());
-                mcr_Fall = null;
-            }
-            if(mcr_JumpBuff != null)
-            {
-                StopCoroutine(IE_JumpBuffer());
-                mcr_JumpBuff = null;
-            }
+            OnGrounded();
         }
         return Ground;
     }
@@ -178,11 +166,9 @@ public class PlayerController : MonoBehaviour
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
-            m_collider.enabled = false;
 
             if(mcr_Fall == null) 
             {
-                
                 mcr_Fall = StartCoroutine(IE_AirChecks()); 
             }
 
@@ -223,20 +209,13 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_AirChecks()
     {
+        CC.EnableMainCollider(false);
         StartCoroutine(IE_CoyoteTime());
         while (!GroundCheck())
          {
             //SpeedApex
             m_rb.velocity = new Vector2(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -6.2f, 100));
-            if (m_rb.velocity.y >= 2f)
-            {
-                m_collider.enabled = false;
-            }
-            else
-            {
-                m_collider.enabled = true;
-            }
-
+            isRising = m_rb.velocity.y > 0;
             yield return new WaitForEndOfFrame();
          }
         yield break;
@@ -275,8 +254,7 @@ public class PlayerController : MonoBehaviour
         {
             if(!MovementLocked)
             {
-            m_rb.velocity = new Vector2(mf_axis * mf_moveSpeed, m_rb.velocity.y);
-
+                m_rb.velocity = new Vector2(mf_axis * mf_moveSpeed, m_rb.velocity.y);
             }
             yield return new WaitForFixedUpdate();
         }
@@ -291,17 +269,21 @@ public class PlayerController : MonoBehaviour
         }
         else if(context.canceled){ mf_Vert = 0; }
     }
+
     void Dash(InputAction.CallbackContext context)
     {
-        if (mf_axis != 0 || mf_Vert != 0)
+        if(m_Dashes == 0 || MovementLocked)
+        {
+            return;
+        }
+        if (mf_axis != 0 || mf_Vert != 0 )
         {
             m_rb.velocity = new Vector2(0, 0);
             m_rb.AddForce(new Vector2(mf_axis, mf_Vert/2) * mf_DashForce, ForceMode2D.Impulse);
             StartCoroutine(IE_Dash());
+            m_Dashes -= 1;
         }
     }
-    #endregion
-
     IEnumerator IE_Dash()
     {
         MovementLocked = true;
@@ -313,6 +295,8 @@ public class PlayerController : MonoBehaviour
 
         yield break;
     }
+    #endregion
+
 
     #region Debug Tools
     private void OnDrawGizmos()
@@ -323,8 +307,8 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded) { Gizmos.color = Color.red; }
         else { Gizmos.color = Color.green; }
-        Gizmos.DrawCube(m_CastPosition.position,new Vector3(.9f,0.2f,1));
-        Gizmos.DrawCube(m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f,1));
+      //  Gizmos.DrawCube(m_CastPosition.position,new Vector3(.9f,0.2f,1));
+      //  Gizmos.DrawCube(m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f,1));
 
         /*
         //Coyote Time Cast
