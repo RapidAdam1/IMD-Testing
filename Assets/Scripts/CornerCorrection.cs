@@ -27,35 +27,31 @@ public class CornerCorrection : MonoBehaviour
             if (collision.IsTouching(T_Left) && controller.IsPlayerRising())
             {
                 Debug.Log("LEFT");
-                player.transform.position += CalcDistanceFromWall(-1);
+                player.transform.position += CalcDistanceFromWall(Vector2.left);
             }
             else if (collision.IsTouching(T_Right) && controller.IsPlayerRising())
             {
                 Debug.Log("Right");
 
-                player.transform.position += CalcDistanceFromWall(1);
+                player.transform.position += CalcDistanceFromWall(Vector2.right);
 
-            }
-            else if (collision.IsTouching(T_Bottom))
-            {
-               controller.GroundCheck();
             }
         }
 
     }
 
-    Vector3 CalcDistanceFromWall(int Direction)
+    Vector3 CalcDistanceFromWall(Vector2 Direction)
     {
-        RaycastHit2D Ray = Physics2D.Raycast(RayStart.transform.position, new Vector2(100 * Direction, 0), 1, m_LayerMask);
-        Vector2 Dist = new Vector2(-Direction*Ray.distance, 0);
-
-        return Dist;
+        RaycastHit2D Ray = Physics2D.Raycast(RayStart.transform.position, Direction, 1, m_LayerMask);
+        Debug.Log(-1 * Direction * new Vector2(Ray.distance, 0));
+        return -1 * Direction *new Vector2(Ray.distance,0);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Ground")
+        if (collision.collider.tag == "Ground" && !controller.GroundCheck())
         {
+            EnableMainCollider(false);
             controller.StartFall();
         }
     }
@@ -64,7 +60,7 @@ public class CornerCorrection : MonoBehaviour
 
         if (collision.collider.tag == "Ground")
         {
-            controller.OnGrounded();
+            controller.GroundCheck();
         }
     }
     public void EnableMainCollider(bool IsEnabled) {mainColl.enabled = IsEnabled;}

@@ -133,6 +133,7 @@ public class PlayerController : MonoBehaviour
         m_rb.gravityScale = 1;
         m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
         m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+        CC.EnableMainCollider(false);
     }
     public void StartFall()
     {
@@ -170,8 +171,9 @@ public class PlayerController : MonoBehaviour
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+            CC.EnableMainCollider(false);
 
-            if(mcr_Fall == null) 
+            if (mcr_Fall == null) 
                 mcr_Fall = StartCoroutine(IE_AirChecks()); 
 
         }
@@ -211,7 +213,6 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_AirChecks()
     {
-        CC.EnableMainCollider(false);
         StartCoroutine(IE_CoyoteTime());
         while (!GroundCheck())
          {
