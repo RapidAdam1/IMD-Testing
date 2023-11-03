@@ -110,11 +110,9 @@ public class PlayerController : MonoBehaviour
     public void OnGrounded()
     {
         m_Dashes = m_DashCount;
+        if(bJumpBuffer)
+            DoJumpBuffer();
 
-        if (bJumpBuffer)
-        {
-            InitialJump();
-        }
         if (mcr_Fall != null)
         {
             StopCoroutine(IE_AirChecks());
@@ -130,6 +128,12 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    void DoJumpBuffer()
+    {
+        m_rb.gravityScale = 1;
+        m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+        m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
+    }
     public void StartFall()
     {
         if (mcr_Fall == null)
@@ -142,14 +146,14 @@ public class PlayerController : MonoBehaviour
     {
         return !Physics2D.BoxCast(m_CastPosition.position + new Vector3(0, 1f), new Vector2(1.5f, 1.3f), 0, Vector2.zero, 0, m_LayerMask);
     }
-    bool GroundCheck()
+    public bool GroundCheck()
     {
-        bool Ground = Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
-        if(Ground)
+        isGrounded = Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
+        if(isGrounded)
         {
             OnGrounded();
         }
-        return Ground;
+        return isGrounded;
     }
     #endregion
 
@@ -161,16 +165,14 @@ public class PlayerController : MonoBehaviour
     }
     void InitialJump()
     {
-        if (isGrounded = GroundCheck() || bCoyoteTime)
+        if (GroundCheck() || bCoyoteTime)
         {
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
 
             if(mcr_Fall == null) 
-            {
                 mcr_Fall = StartCoroutine(IE_AirChecks()); 
-            }
 
         }
         else

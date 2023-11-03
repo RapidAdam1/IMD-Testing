@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CornerCorrection : MonoBehaviour
@@ -33,7 +32,7 @@ public class CornerCorrection : MonoBehaviour
             }
             else if (collision.IsTouching(T_Bottom))
             {
-               controller.OnGrounded();
+               controller.GroundCheck();
             }
         }
 
