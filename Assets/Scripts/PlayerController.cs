@@ -87,7 +87,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!collision.IsTouching(CC.GetMainColl()))
             return;
-
         IInteractable Interface = collision.GetComponent<IInteractable>();
         if (Interface != null)
         {
@@ -123,6 +122,8 @@ public class PlayerController : MonoBehaviour
             mcr_Fall = StartCoroutine(IE_AirChecks());
         }
     }
+
+
     #endregion
 
     #region Jumping

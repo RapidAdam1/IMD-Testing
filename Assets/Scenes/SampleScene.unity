@@ -678,8 +678,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.23095, y: -0.06260002, z: 0}
-    m_Extent: {x: 2.5002499, y: 1.582, z: 0}
+    m_Center: {x: 0.23364997, y: -0.059349954, z: 0}
+    m_Extent: {x: 2.51215, y: 1.5854499, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -12725,6 +12725,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 148e16edd44de6f41a763bc2393cb028, type: 3}
+--- !u!1 &2045499407 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8219989177751776203, guid: 148e16edd44de6f41a763bc2393cb028, type: 3}
+  m_PrefabInstance: {fileID: 2045499406}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2053565815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12857,7 +12862,7 @@ PrefabInstance:
     - target: {fileID: 1735505987137601970, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: DesiredItem
       value: 
-      objectReference: {fileID: 1125982891}
+      objectReference: {fileID: 2045499407}
     - target: {fileID: 3314938674704653600, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_RootOrder
       value: 4
