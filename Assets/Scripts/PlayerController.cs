@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int m_DashCount = 1;
     int m_Dashes = 1;
 
-    [SerializeField] Transform m_CastPosition;
     [SerializeField] LayerMask m_LayerMask;
 
     public bool bisMoving;
@@ -26,7 +25,6 @@ public class PlayerController : MonoBehaviour
 
     bool bJumpBuffer;
     bool bCoyoteTime;
-    bool isGrounded;
     bool isRising; public bool IsPlayerRising() { return isRising; }
 
     float mf_axis;
@@ -42,14 +40,6 @@ public class PlayerController : MonoBehaviour
 
     bool IsMoving;
     bool JumpBuff;
-
-
-    private void Update()
-    {
-        JumpBuff = mcr_JumpBuff != null;
-        IsMoving = mcr_Move != null;
-
-    }
 
     private void Awake()
     {
@@ -72,6 +62,9 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Move").performed += Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Move").canceled += Handle_MoveCancelled;
 
+        m_PlayerInput.actions.FindAction("SlowTime").performed += Handle_SlowTimePerformed;
+        m_PlayerInput.actions.FindAction("SlowTime").canceled += Handle_SlowTimeCancelled;
+
     }
 
     private void OnDisable()
@@ -83,10 +76,11 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Vertical").performed -= VerticalRead;
         m_PlayerInput.actions.FindAction("Vertical").canceled -= VerticalRead;
 
-
-
         m_PlayerInput.actions.FindAction("Move").performed -= Handle_MovePerformed;
         m_PlayerInput.actions.FindAction("Move").canceled -= Handle_MoveCancelled;
+
+        m_PlayerInput.actions.FindAction("SlowTime").performed -= Handle_SlowTimePerformed;
+        m_PlayerInput.actions.FindAction("SlowTime").canceled -= Handle_SlowTimeCancelled;
         StopAllCoroutines();
     }
     #endregion
@@ -109,7 +103,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnGrounded()
     {
-        m_Dashes = m_DashCount;
         if(bJumpBuffer)
             DoJumpBuffer();
 
@@ -117,15 +110,13 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(IE_AirChecks());
             mcr_Fall = null;
+            m_Dashes = m_DashCount;
         }
         if (mcr_JumpBuff != null)
         {
             StopCoroutine(IE_JumpBuffer());
             mcr_JumpBuff = null;
         }
-
-        CC.EnableMainCollider(true);
-
     }
 
     void DoJumpBuffer()
@@ -133,8 +124,8 @@ public class PlayerController : MonoBehaviour
         m_rb.gravityScale = 1;
         m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
         m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
-        CC.EnableMainCollider(false);
     }
+
     public void StartFall()
     {
         if (mcr_Fall == null)
@@ -143,19 +134,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    bool CoyoteCollisionCheck()
-    {
-        return !Physics2D.BoxCast(m_CastPosition.position + new Vector3(0, 1f), new Vector2(1.5f, 1.3f), 0, Vector2.zero, 0, m_LayerMask);
-    }
-    public bool GroundCheck()
-    {
-        isGrounded = Physics2D.BoxCast(m_CastPosition.position, new Vector2(.9f, 0.2f), 0, Vector2.zero, 0, m_LayerMask);
-        if(isGrounded)
-        {
-            OnGrounded();
-        }
-        return isGrounded;
-    }
+
     #endregion
 
     #region Jumping
@@ -166,12 +145,11 @@ public class PlayerController : MonoBehaviour
     }
     void InitialJump()
     {
-        if (GroundCheck() || bCoyoteTime)
+        if (CC.isGrounded || bCoyoteTime)
         {
             m_rb.gravityScale = 1;
             m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
             m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
-            CC.EnableMainCollider(false);
 
             if (mcr_Fall == null) 
                 mcr_Fall = StartCoroutine(IE_AirChecks()); 
@@ -185,7 +163,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_CoyoteTime()
     {
-        bCoyoteTime = CoyoteCollisionCheck();
+        bCoyoteTime = CC.CoyoteCollisionCheck();
         yield return new WaitForSeconds(mf_coyoteTime);
         bCoyoteTime = false;
         yield break;
@@ -202,7 +180,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator IE_JumpBuffer()
     {
-        if(Physics2D.Linecast(m_CastPosition.position,m_CastPosition.position - Vector3.up,m_LayerMask))
+        if(CC.CanJumpBuffer())
         {
         bJumpBuffer = true;
         yield return new WaitForSeconds(mf_JumpBufferTime);
@@ -214,7 +192,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator IE_AirChecks()
     {
         StartCoroutine(IE_CoyoteTime());
-        while (!GroundCheck())
+        while (!CC.isGrounded)
          {
             //SpeedApex
             m_rb.velocity = new Vector2(m_rb.velocity.x, Mathf.Clamp(m_rb.velocity.y, -6.2f, 100));
@@ -250,6 +228,15 @@ public class PlayerController : MonoBehaviour
                 mcr_Move = null;
             }
         }
+    }
+
+    void Handle_SlowTimePerformed(InputAction.CallbackContext context)
+    {
+        Time.timeScale = 0.5f;
+    }
+    void Handle_SlowTimeCancelled(InputAction.CallbackContext context)
+    {
+        Time.timeScale = 1;
     }
     IEnumerator IE_MoveUpdate()
     {
@@ -308,11 +295,11 @@ public class PlayerController : MonoBehaviour
         //Gizmos.DrawLine(m_CastPosition.position, m_CastPosition.position - Vector3.up);
 
 
-        if (isGrounded) { Gizmos.color = Color.red; }
+/*        if (CC.isGrounded) { Gizmos.color = Color.red; }
         else { Gizmos.color = Color.green; }
-      //  Gizmos.DrawCube(m_CastPosition.position,new Vector3(.9f,0.2f,1));
-      //  Gizmos.DrawCube(m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f,1));
-
+        Gizmos.DrawCube(CC.m_CastPosition.position, new Vector3(.9f, 0.2f, 1));
+        Gizmos.DrawCube(CC.m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f, 1));
+*/
         /*
         //Coyote Time Cast
         Gizmos.color = Color.yellow;

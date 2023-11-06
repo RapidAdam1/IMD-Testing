@@ -9,8 +9,8 @@ public class FollowCamScript : MonoBehaviour
     Rigidbody2D m_PlayerRb;
     Camera cam;
 
-    [SerializeField] float LookAheadXDistance = 1.3f;
-    [SerializeField] float LookAheadYDistance = 0.5f;
+    [SerializeField] float LookAheadXDistance = 6f;
+    [SerializeField] float LookAheadYDistance = 4;
     [SerializeField] float LookAheadSpeed = 2.0f;
     const float VerticalOffset = 2.5f;
     Vector3 m_CameraOffset;
