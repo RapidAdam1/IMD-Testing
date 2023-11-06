@@ -9,43 +9,42 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     PlayerInput m_PlayerInput;
-    public Rigidbody2D m_rb;
+    Rigidbody2D m_rb;
     CornerCorrection CC;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
     [SerializeField] float mf_jumpForce = 10.0f;
-    [SerializeField] float mf_DashForce = 10.0f;
-    [SerializeField] int m_DashCount = 1;
-    int m_Dashes = 1;
-
-    [SerializeField] LayerMask m_LayerMask;
 
     public bool bisMoving;
-    bool MovementLocked = false;
+    public bool MovementLocked = false;
 
-    bool bJumpBuffer;
-    bool bCoyoteTime;
     bool isRising; public bool IsPlayerRising() { return isRising; }
 
     float mf_axis;
     float mf_Vert;
-    float mf_coyoteTime = 0.2f;
-    float mf_JumpBufferTime = 0.25f;
+
 
     public bool KeyHeld = true;
 
     Coroutine mcr_Move;
-    Coroutine mcr_JumpBuff;
     Coroutine mcr_Fall;
 
-    bool IsMoving;
-    bool JumpBuff;
+    CoyoteTimeScript CoyoteTimeComp;
+    JumpBufferScript JumpBufferComp;
+    DashScript DashComp;
+    TimeSlowScript TimeSlowComp;
+
 
     private void Awake()
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
         CC=GetComponentInChildren<CornerCorrection>();
+
+        CoyoteTimeComp = GetComponent<CoyoteTimeScript>();
+        JumpBufferComp = GetComponent<JumpBufferScript>();
+        DashComp = GetComponent<DashScript>();
+        TimeSlowComp = GetComponent<TimeSlowScript>();
     }
 
     #region Bindings
@@ -63,7 +62,6 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Move").canceled += Handle_MoveCancelled;
 
         m_PlayerInput.actions.FindAction("SlowTime").performed += Handle_SlowTimePerformed;
-        m_PlayerInput.actions.FindAction("SlowTime").canceled += Handle_SlowTimeCancelled;
 
     }
 
@@ -80,7 +78,6 @@ public class PlayerController : MonoBehaviour
         m_PlayerInput.actions.FindAction("Move").canceled -= Handle_MoveCancelled;
 
         m_PlayerInput.actions.FindAction("SlowTime").performed -= Handle_SlowTimePerformed;
-        m_PlayerInput.actions.FindAction("SlowTime").canceled -= Handle_SlowTimeCancelled;
         StopAllCoroutines();
     }
     #endregion
@@ -96,35 +93,27 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-
     #region Colliders
-
- 
 
     public void OnGrounded()
     {
-        if(bJumpBuffer)
-            DoJumpBuffer();
+        if(JumpBufferComp.GetJumpBufferActivated())
+            PlayerJump();
 
         if (mcr_Fall != null)
         {
             StopCoroutine(IE_AirChecks());
             mcr_Fall = null;
-            m_Dashes = m_DashCount;
+            if(DashComp)
+                DashComp.ResetDashes();
         }
-        if (mcr_JumpBuff != null)
-        {
-            StopCoroutine(IE_JumpBuffer());
-            mcr_JumpBuff = null;
-        }
+
+        if (JumpBufferComp)
+            JumpBufferComp.StopJumpBuffer();
+
     }
 
-    void DoJumpBuffer()
-    {
-        m_rb.gravityScale = 1;
-        m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
-        m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
-    }
+
 
     public void StartFall()
     {
@@ -145,29 +134,27 @@ public class PlayerController : MonoBehaviour
     }
     void InitialJump()
     {
-        if (CC.isGrounded || bCoyoteTime)
+        if (CC.isGrounded || CoyoteTimeComp.GetCTEnabled())
         {
-            m_rb.gravityScale = 1;
-            m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
-            m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
-
+            PlayerJump();
             if (mcr_Fall == null) 
                 mcr_Fall = StartCoroutine(IE_AirChecks()); 
-
         }
         else
         {
-            mcr_JumpBuff = StartCoroutine(IE_JumpBuffer());
+            if (JumpBufferComp)
+                JumpBufferComp.StartJumpBuffer(CC.CanJumpBuffer());
+  
         }
     }
-
-    IEnumerator IE_CoyoteTime()
+    public void PlayerJump()
     {
-        bCoyoteTime = CC.CoyoteCollisionCheck();
-        yield return new WaitForSeconds(mf_coyoteTime);
-        bCoyoteTime = false;
-        yield break;
+        m_rb.gravityScale = 1;
+        m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
+        m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
     }
+
+
     IEnumerator IE_CancelJump()
     {
         while (m_rb.velocity.y > 1)
@@ -178,20 +165,9 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    IEnumerator IE_JumpBuffer()
-    {
-        if(CC.CanJumpBuffer())
-        {
-        bJumpBuffer = true;
-        yield return new WaitForSeconds(mf_JumpBufferTime);
-        }
-        bJumpBuffer = false;
-        yield break;
-    }
-
     IEnumerator IE_AirChecks()
     {
-        StartCoroutine(IE_CoyoteTime());
+        CoyoteTimeComp.StartCoyoteTime(true);
         while (!CC.isGrounded)
          {
             //SpeedApex
@@ -210,34 +186,45 @@ public class PlayerController : MonoBehaviour
         mf_axis = context.ReadValue<float>();
         bisMoving = true;
         if (mcr_Move == null)
-        {
             mcr_Move = StartCoroutine(IE_MoveUpdate());
-        }
     }
      
     private void Handle_MoveCancelled(InputAction.CallbackContext context)
     {
         mf_axis = 0;
         bisMoving = false;
+        if (mcr_Move == null)
+            return;
+
+        m_rb.velocity = new Vector2(0, m_rb.velocity.y);
         if (mcr_Move != null)
         {
-            m_rb.velocity = new Vector2(0, m_rb.velocity.y);
-            if (mcr_Move != null)
-            {
-                StopCoroutine(mcr_Move);
-                mcr_Move = null;
-            }
+            StopCoroutine(mcr_Move);
+            mcr_Move = null;
         }
+     
+    }
+    void VerticalRead(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            mf_Vert = context.ReadValue<float>();
+        }
+        else if (context.canceled) { mf_Vert = 0; }
     }
 
     void Handle_SlowTimePerformed(InputAction.CallbackContext context)
     {
-        Time.timeScale = 0.5f;
+        if (TimeSlowComp)
+            TimeSlowComp.SlowTime();
     }
-    void Handle_SlowTimeCancelled(InputAction.CallbackContext context)
+
+    void Dash(InputAction.CallbackContext context)
     {
-        Time.timeScale = 1;
+        if (DashComp)
+            DashComp.Dash(new Vector2(mf_axis,mf_Vert),m_rb);
     }
+
     IEnumerator IE_MoveUpdate()
     {
         while (mf_axis != 0)
@@ -251,40 +238,7 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    void VerticalRead(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            mf_Vert = context.ReadValue<float>();
-        }
-        else if(context.canceled){ mf_Vert = 0; }
-    }
 
-    void Dash(InputAction.CallbackContext context)
-    {
-        if(m_Dashes == 0 || MovementLocked)
-        {
-            return;
-        }
-        if (mf_axis != 0 || mf_Vert != 0 )
-        {
-            m_rb.velocity = new Vector2(0, 0);
-            m_rb.AddForce(new Vector2(mf_axis, mf_Vert/2) * mf_DashForce, ForceMode2D.Impulse);
-            StartCoroutine(IE_Dash());
-            m_Dashes -= 1;
-        }
-    }
-    IEnumerator IE_Dash()
-    {
-        MovementLocked = true;
-        m_rb.gravityScale = 0;
-        yield return new WaitForSeconds(0.15f);
-        m_rb.velocity = new Vector2(0, m_rb.velocity.y);
-        MovementLocked = false;
-        m_rb.gravityScale = 1;
-
-        yield break;
-    }
     #endregion
 
 
