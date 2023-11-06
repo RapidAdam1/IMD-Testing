@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mf_moveSpeed = 10.0f;
     [SerializeField] float mf_jumpForce = 10.0f;
 
-    public bool bisMoving;
+    bool bisMoving; public bool GetPlayerMoving() { return bisMoving; }
+   
     public bool MovementLocked = false;
 
     bool isRising; public bool IsPlayerRising() { return isRising; }
@@ -24,8 +25,6 @@ public class PlayerController : MonoBehaviour
     float mf_Vert;
 
 
-    public bool KeyHeld = true;
-
     Coroutine mcr_Move;
     Coroutine mcr_Fall;
 
@@ -33,7 +32,7 @@ public class PlayerController : MonoBehaviour
     JumpBufferScript JumpBufferComp;
     DashScript DashComp;
     TimeSlowScript TimeSlowComp;
-
+    ItemStorageScript ItemStorageComp;
 
     private void Awake()
     {
@@ -45,6 +44,7 @@ public class PlayerController : MonoBehaviour
         JumpBufferComp = GetComponent<JumpBufferScript>();
         DashComp = GetComponent<DashScript>();
         TimeSlowComp = GetComponent<TimeSlowScript>();
+        ItemStorageComp = GetComponent<ItemStorageScript>();
     }
 
     #region Bindings
@@ -85,6 +85,8 @@ public class PlayerController : MonoBehaviour
     #region Interafaces
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!collision.IsTouching(CC.GetMainColl()))
+            return;
         IInteractable Interface = collision.GetComponent<IInteractable>();
         if (Interface != null)
         {
@@ -93,7 +95,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region Colliders
+    #region Ground & Fall
 
     public void OnGrounded()
     {
@@ -112,8 +114,6 @@ public class PlayerController : MonoBehaviour
             JumpBufferComp.StopJumpBuffer();
 
     }
-
-
 
     public void StartFall()
     {
@@ -213,6 +213,21 @@ public class PlayerController : MonoBehaviour
         else if (context.canceled) { mf_Vert = 0; }
     }
 
+    IEnumerator IE_MoveUpdate()
+    {
+        while (mf_axis != 0)
+        {
+            if (!MovementLocked)
+            {
+                m_rb.velocity = new Vector2(mf_axis * mf_moveSpeed, m_rb.velocity.y);
+            }
+            yield return new WaitForFixedUpdate();
+        }
+        yield break;
+    }
+    #endregion
+
+    //Abilities
     void Handle_SlowTimePerformed(InputAction.CallbackContext context)
     {
         if (TimeSlowComp)
@@ -224,41 +239,4 @@ public class PlayerController : MonoBehaviour
         if (DashComp)
             DashComp.Dash(new Vector2(mf_axis,mf_Vert),m_rb);
     }
-
-    IEnumerator IE_MoveUpdate()
-    {
-        while (mf_axis != 0)
-        {
-            if(!MovementLocked)
-            {
-                m_rb.velocity = new Vector2(mf_axis * mf_moveSpeed, m_rb.velocity.y);
-            }
-            yield return new WaitForFixedUpdate();
-        }
-        yield break;
-    }
-
-
-    #endregion
-
-
-    #region Debug Tools
-    private void OnDrawGizmos()
-    {
-        //Line To Ground (Unused)
-        //Gizmos.DrawLine(m_CastPosition.position, m_CastPosition.position - Vector3.up);
-
-
-/*        if (CC.isGrounded) { Gizmos.color = Color.red; }
-        else { Gizmos.color = Color.green; }
-        Gizmos.DrawCube(CC.m_CastPosition.position, new Vector3(.9f, 0.2f, 1));
-        Gizmos.DrawCube(CC.m_CastPosition.position + Vector3.up, new Vector3(0.9f, 0.2f, 1));
-*/
-        /*
-        //Coyote Time Cast
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawCube(m_CastPosition.position + new Vector3(0,1f), new Vector2(1.5f, 1.3f));
-        */
-    }
-    #endregion
 };

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CornerCorrection : MonoBehaviour
 {
-    [SerializeField] Collider2D mainColl;
+    [SerializeField] Collider2D mainColl; public Collider2D GetMainColl() { return mainColl; }
 
     [SerializeField] Collider2D T_Left;
     [SerializeField] Collider2D T_Right;

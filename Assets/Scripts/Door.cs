@@ -5,6 +5,7 @@ using UnityEngine;
 public class Door : MonoBehaviour , IInteractable
 {
     private Collider2D m_Collder;
+    [SerializeField] GameObject DesiredItem;
 
     private void Awake()
     {
@@ -13,11 +14,14 @@ public class Door : MonoBehaviour , IInteractable
 
     public void OnInteract(GameObject Interactor)
     {
-        PlayerController PlayerRef = Interactor.GetComponent<PlayerController>();
-        if (PlayerRef != null && PlayerRef.KeyHeld) 
-        {
-            PlayerRef.KeyHeld = false;
-            m_Collder.gameObject.SetActive(false);
-        }
+        ItemStorageScript PlayerInv = Interactor.GetComponent<ItemStorageScript>();
+        if (PlayerInv == null)
+            return;
+
+        GameObject Item = PlayerInv.GetItem(DesiredItem);
+        if (Item != DesiredItem)
+            return;
+        PlayerInv.RemoveItem(DesiredItem);
+        m_Collder.gameObject.SetActive(false);
     }
 }

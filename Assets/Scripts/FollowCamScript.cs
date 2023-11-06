@@ -50,7 +50,7 @@ public class FollowCamScript : MonoBehaviour
     {
         while (true)
         {
-            if (playerController.bisMoving) { m_CameraOffset.x = Mathf.Clamp(m_PlayerRb.velocity.x * LookAheadXDistance, -LookAheadXDistance, LookAheadXDistance); }
+            if (playerController.GetPlayerMoving()) { m_CameraOffset.x = Mathf.Clamp(m_PlayerRb.velocity.x * LookAheadXDistance, -LookAheadXDistance, LookAheadXDistance); }
             else m_CameraOffset.x = 0;
 
             if (m_PlayerRb.velocity.y < -4)

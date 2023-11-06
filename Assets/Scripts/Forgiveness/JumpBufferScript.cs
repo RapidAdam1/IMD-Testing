@@ -5,9 +5,9 @@ using UnityEngine;
 public class JumpBufferScript : MonoBehaviour
 {
 
-    bool bJumpBuffer; 
+    [SerializeField] float mf_JumpBufferTime = 0.25f;
     public bool GetJumpBufferActivated() { return bJumpBuffer; }
-    float mf_JumpBufferTime = 0.25f;
+    bool bJumpBuffer; 
 
     Coroutine mcr_JumpBuff;
 
