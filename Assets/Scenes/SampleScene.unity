@@ -149,11 +149,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &233386316 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5286916692495265152, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-  m_PrefabInstance: {fileID: 2053565815}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &454561767
 GameObject:
   m_ObjectHideFlags: 3
@@ -625,8 +620,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.23979998, y: -0.0589, z: 0}
-    m_Extent: {x: 2.5025, y: 1.5721, z: 0}
+    m_Center: {x: 0.24234998, y: -0.065699995, z: 0}
+    m_Extent: {x: 2.50705, y: 1.5783999, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -12917,24 +12912,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1735505987137601970, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: LockSprite
-      value: 
-      objectReference: {fileID: 233386316}
-    - target: {fileID: 1735505987137601970, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: DesiredItem
       value: 
       objectReference: {fileID: 1125982891}
     - target: {fileID: 3314938674704653600, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_RootOrder
       value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3314938674704653600, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1865
-      objectReference: {fileID: 0}
-    - target: {fileID: 3314938674704653600, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.9750067
       objectReference: {fileID: 0}
     - target: {fileID: 3314938674704653600, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12977,53 +12960,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4365154595898925396, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Size.x
-      value: 0.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 4365154595898925396, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.37
-      objectReference: {fileID: 0}
-    - target: {fileID: 4365154595898925396, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_SpriteTilingProperty.newSize.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4365154595898925396, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_SpriteTilingProperty.newSize.y
-      value: 0.1
-      objectReference: {fileID: 0}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 8a9a32a939335b54597955de62489a2b, type: 2}
     - target: {fileID: 7230305824058069849, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_Name
-      value: Door1
+      value: Door
       objectReference: {fileID: 0}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Size.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Size.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Sprite
+    - target: {fileID: 7505257800524345792, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
+      propertyPath: m_Material
       value: 
-      objectReference: {fileID: -68280415, guid: bcd386a8e7616ad46a06fc75918d0ea8, type: 3}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8334062251072493343, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6200000, guid: 8a9a32a939335b54597955de62489a2b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
