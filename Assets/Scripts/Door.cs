@@ -6,6 +6,7 @@ public class Door : MonoBehaviour , IInteractable
 {
     private Collider2D m_Collder;
     [SerializeField] GameObject DesiredItem;
+    [SerializeField] GameObject LockSprite;
 
     private void Awake()
     {
@@ -17,11 +18,25 @@ public class Door : MonoBehaviour , IInteractable
         ItemStorageScript PlayerInv = Interactor.GetComponent<ItemStorageScript>();
         if (PlayerInv == null)
             return;
-
         GameObject Item = PlayerInv.GetItem(DesiredItem);
         if (Item != DesiredItem)
             return;
-        PlayerInv.RemoveItem(DesiredItem);
-        m_Collder.gameObject.SetActive(false);
+
+        PlayerInv.RemoveItem(DesiredItem,gameObject);
+        StartCoroutine(OpenDoor());
     }
+
+    IEnumerator OpenDoor()
+    {
+
+        yield return new WaitForSecondsRealtime(2);
+        LockSprite.SetActive(false);
+        Destroy(DesiredItem);
+        Destroy(gameObject);
+    }
+
+    public void OnUse(GameObject U)
+    {
+    }
+
 }

@@ -10,4 +10,9 @@ public class HealthPickup : MonoBehaviour, IInteractable
         Interactor.GetComponent<HealthComponent>().AddHealth(HealthToAdd);
         Destroy(gameObject);    
     }
+
+    public void OnUse(GameObject U)
+    {
+        
+    }
 }

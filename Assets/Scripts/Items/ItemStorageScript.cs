@@ -20,8 +20,6 @@ public class ItemStorageScript : MonoBehaviour
             return;
         System.Array.Resize(ref Items, Items.Length+1);
         Items[Items.Length-1] = Item;
-        Debug.Log(Items.Length);
-
     }
 
     public GameObject GetItem(GameObject FindItem) 
@@ -39,7 +37,7 @@ public class ItemStorageScript : MonoBehaviour
         return null;
     }
 
-    public void RemoveItem(GameObject RemoveItem) 
+    public void RemoveItem(GameObject RemoveItem, GameObject Remover) 
     {
         if (!GetItem(RemoveItem))
             return;
@@ -47,8 +45,16 @@ public class ItemStorageScript : MonoBehaviour
         Items[index] = null;
         System.Array.Sort(Items);
         System.Array.Resize(ref Items, Items.Length - 1);
-        Destroy(RemoveItem); 
-        Debug.Log(Items.Length);
+        IInteractable Interface = RemoveItem.GetComponent<IInteractable>();
+        if (Interface != null)
+        {
+            Interface.OnUse(Remover);
+        }
+        else
+        {
+            Destroy(RemoveItem); 
+
+        }
     }
 
 }
