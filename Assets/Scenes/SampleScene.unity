@@ -620,8 +620,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.24234998, y: -0.065699995, z: 0}
-    m_Extent: {x: 2.50705, y: 1.5783999, z: 0}
+    m_Center: {x: 0.23590004, y: -0.062099993, z: 0}
+    m_Extent: {x: 2.5054002, y: 1.5788, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -12959,10 +12959,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4365154595898925396, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 6200000, guid: 8a9a32a939335b54597955de62489a2b, type: 2}
     - target: {fileID: 7230305824058069849, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_Name
       value: Door
