@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float mf_moveSpeed = 10.0f;
     [SerializeField] float mf_jumpForce = 10.0f;
-
+    [SerializeField] public Transform KeyFollowPoint;
     bool bisMoving; public bool GetPlayerMoving() { return bisMoving; }
    
     public bool MovementLocked = false;
@@ -85,8 +85,6 @@ public class PlayerController : MonoBehaviour
     #region Interafaces
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.IsTouching(CC.GetMainColl()))
-            return;
         IInteractable Interface = collision.GetComponent<IInteractable>();
         if (Interface != null)
         {
@@ -184,6 +182,7 @@ public class PlayerController : MonoBehaviour
     private void Handle_MovePerformed(InputAction.CallbackContext context)
     {
         mf_axis = context.ReadValue<float>();
+        KeyFollowPoint.localPosition = new Vector2 (mf_axis*-1,0);
         bisMoving = true;
         if (mcr_Move == null)
             mcr_Move = StartCoroutine(IE_MoveUpdate());

@@ -16,9 +16,10 @@ public class ItemStorageScript : MonoBehaviour
     }
     public void AddItem(GameObject Item) 
     {
+        if (Items.Contains(Item))
+            return;
         System.Array.Resize(ref Items, Items.Length+1);
         Items[Items.Length-1] = Item;
-        Item.SetActive(false);
         Debug.Log(Items.Length);
 
     }
@@ -46,7 +47,7 @@ public class ItemStorageScript : MonoBehaviour
         Items[index] = null;
         System.Array.Sort(Items);
         System.Array.Resize(ref Items, Items.Length - 1);
-
+        Destroy(RemoveItem); 
         Debug.Log(Items.Length);
     }
 
