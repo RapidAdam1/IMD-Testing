@@ -47,6 +47,7 @@ public class Key : MonoBehaviour , IInteractable
 
     IEnumerator MoveToLocation(Transform Location)
     {
+        MoveToSpeed = 3;
         while(transform.position != Location.position)
         {
         transform.localPosition = Vector3.Lerp(transform.position, Location.position , MoveToSpeed * Time.deltaTime);

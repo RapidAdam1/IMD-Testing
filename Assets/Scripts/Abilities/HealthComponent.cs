@@ -8,6 +8,10 @@ public class HealthComponent : MonoBehaviour
     float CurrentHealth;
     float DamageForgiveness = 1.0f;
 
+    private void Awake()
+    {
+        CurrentHealth = MaxHealth;
+    }
     public void ApplyDamage(float Damage)
     {
         if (Damage > CurrentHealth && CurrentHealth != DamageForgiveness) { CurrentHealth = DamageForgiveness; }
@@ -20,6 +24,7 @@ public class HealthComponent : MonoBehaviour
                 OnDeath(); 
             }
         }
+        Debug.Log("Health:" + CurrentHealth);
     }
 
     public void AddHealth(float Health)

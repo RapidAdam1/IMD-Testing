@@ -8,30 +8,35 @@ public class SpikeTrap : MonoBehaviour
    
     Collider2D m_collider;
     HealthComponent Health;
+    bool SpikeActive = false;
     void Start()
     {
        m_collider = GetComponent<Collider2D>();
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (Health = collision.gameObject.GetComponent<HealthComponent>()) ;
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (Health && m_collider == true)
+        Health = collision.GetComponentInParent<HealthComponent>();
+        Debug.Log(Health);
+        if (SpikeActive && Health != null)
         {
-            Debug.Log("HIT");
+            Health.ApplyDamage(15);
         }
     }
-
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Health = null;
+    }
     private void ActivateSpike()
     {
-        m_collider.enabled = true ;
+        SpikeActive = true;
+        if(Health != null)
+        {
+            Health.ApplyDamage(15);
+        }
     }
     private void DeactivateSpike() 
     { 
-        m_collider.enabled = false;
+        SpikeActive = false;
     }
 }
