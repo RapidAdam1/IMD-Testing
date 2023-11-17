@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class TimeSlowScript : MonoBehaviour
     [SerializeField] float CooldownTime =1;
     float CurrentTimeScale = 1;
     bool bIsSlowed;
+    public event Action<bool> OnTimeSlowed;
     public void SlowTime()
     {
         if (bIsSlowed)
@@ -21,6 +23,7 @@ public class TimeSlowScript : MonoBehaviour
     {
         bIsSlowed = true;
         Time.timeScale = SlowedTimeScale;
+        OnTimeSlowed?.Invoke(true);
         yield return new WaitForSecondsRealtime(TimeToBeSlowed);
 
 
@@ -33,6 +36,7 @@ public class TimeSlowScript : MonoBehaviour
         }
 
         Time.timeScale = 1;
+        OnTimeSlowed?.Invoke(false);
         StartCoroutine(Cooldown(CooldownTime));
         yield break;
     }

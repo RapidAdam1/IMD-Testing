@@ -16,11 +16,13 @@ public class SpikeTrap : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Health = collision.GetComponentInParent<HealthComponent>();
-        Debug.Log(Health);
-        if (SpikeActive && Health != null)
+        if(Health == null)
         {
-            Health.ApplyDamage(15);
+            Health = collision.GetComponentInParent<HealthComponent>();
+            if (SpikeActive && Health != null)
+            {
+                Health.ApplyDamage(10);
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -29,11 +31,11 @@ public class SpikeTrap : MonoBehaviour
     }
     private void ActivateSpike()
     {
-        SpikeActive = true;
         if(Health != null)
         {
-            Health.ApplyDamage(15);
+            Health.ApplyDamage(10);
         }
+        SpikeActive = true;
     }
     private void DeactivateSpike() 
     { 

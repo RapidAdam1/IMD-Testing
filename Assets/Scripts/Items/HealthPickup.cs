@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class HealthPickup : MonoBehaviour, IInteractable
 {
-    [SerializeField] float HealthToAdd = 10;
+    [SerializeField] float HealthPercentToAdd = 10;
     public virtual void OnInteract(GameObject Interactor) 
     { 
-        Interactor.GetComponent<HealthComponent>().AddHealth(HealthToAdd);
+        Interactor.GetComponent<HealthComponent>().AddHealth(HealthPercentToAdd);
         Destroy(gameObject);
     }
 

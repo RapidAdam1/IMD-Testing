@@ -7,18 +7,23 @@ public class DashScript : MonoBehaviour
 {
     
     PlayerController PlayerCon;
-
+    TrailRenderer TrailRenderer;
     [SerializeField] float mf_DashForce = 250.0f;
     [SerializeField] int m_DashCount = 1;
+    [SerializeField] [Range(0,1.5f)] float VerticalSpeedMultiplier = 1;
+    [SerializeField] [Range(0.5f, 2)] float HorizontalSpeedMultiplier = 1;
+
     int m_Dashes = 1;
 
     private void Awake()
     {
         PlayerCon = GetComponent<PlayerController>();    
+        TrailRenderer = GetComponent<TrailRenderer>();
     }
 
     public void Dash(Vector2 Direction, Rigidbody2D OwningRigidBody)
     {
+        Direction *= new Vector2(HorizontalSpeedMultiplier, VerticalSpeedMultiplier);
         if (m_Dashes == 0 || PlayerCon.MovementLocked)
         {
             return;
@@ -37,8 +42,10 @@ public class DashScript : MonoBehaviour
     IEnumerator IE_Dash(Rigidbody2D OwningRigidBody)
     {
         PlayerCon.MovementLocked = true;
+        TrailRenderer.emitting = true;
         OwningRigidBody.gravityScale = 0;
         yield return new WaitForSeconds(0.15f);
+        TrailRenderer.emitting = false;
         OwningRigidBody.velocity = new Vector2(0, OwningRigidBody.velocity.y);
         PlayerCon.MovementLocked = false;
         OwningRigidBody.gravityScale = 1;

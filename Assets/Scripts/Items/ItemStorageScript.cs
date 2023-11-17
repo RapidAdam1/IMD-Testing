@@ -9,11 +9,6 @@ public class ItemStorageScript : MonoBehaviour
 {
     GameObject[] Items = new GameObject[0];
 
-    private void Awake()
-    {
-        Debug.Log(Items.Length);
-
-    }
     public void AddItem(GameObject Item) 
     {
         if (Items.Contains(Item))
