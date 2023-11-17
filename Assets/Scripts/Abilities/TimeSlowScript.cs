@@ -10,7 +10,7 @@ public class TimeSlowScript : MonoBehaviour
     [SerializeField] float CooldownTime =1;
     float CurrentTimeScale = 1;
     bool bIsSlowed;
-    public event Action<bool> OnTimeSlowed;
+    public event Action<float,bool> OnTimeSlowed;
     public void SlowTime()
     {
         if (bIsSlowed)
@@ -23,7 +23,7 @@ public class TimeSlowScript : MonoBehaviour
     {
         bIsSlowed = true;
         Time.timeScale = SlowedTimeScale;
-        OnTimeSlowed?.Invoke(true);
+        OnTimeSlowed?.Invoke(SlowLength,true);
         yield return new WaitForSecondsRealtime(TimeToBeSlowed);
 
 
@@ -36,7 +36,7 @@ public class TimeSlowScript : MonoBehaviour
         }
 
         Time.timeScale = 1;
-        OnTimeSlowed?.Invoke(false);
+        OnTimeSlowed?.Invoke(SlowLength,false);
         StartCoroutine(Cooldown(CooldownTime));
         yield break;
     }

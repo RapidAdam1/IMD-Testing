@@ -620,8 +620,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.24010003, y: -0.06705004, z: 0}
-    m_Extent: {x: 2.5046, y: 1.58045, z: 0}
+    m_Center: {x: 0.23339999, y: -0.059949994, z: 0}
+    m_Extent: {x: 2.5063, y: 1.57715, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -12914,6 +12914,8 @@ MonoBehaviour:
   mf_jumpForce: 175
   KeyFollowPoint: {fileID: 997458930}
   MovementLocked: 0
+  Cam: {fileID: 1098774476}
+  CamZoomTime: 0
 --- !u!114 &1693285888
 MonoBehaviour:
   m_ObjectHideFlags: 0

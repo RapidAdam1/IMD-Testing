@@ -1,4 +1,6 @@
+using Cinemachine;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +29,10 @@ public class PlayerController : MonoBehaviour
 
     Coroutine mcr_Move;
     Coroutine mcr_Fall;
+    Coroutine mcr_Lerp;
+
+    [SerializeField] CinemachineVirtualCamera Cam;
+    [SerializeField] float CamZoomTime;
 
     CoyoteTimeScript CoyoteTimeComp;
     JumpBufferScript JumpBufferComp;
@@ -44,6 +50,7 @@ public class PlayerController : MonoBehaviour
         JumpBufferComp = GetComponent<JumpBufferScript>();
         DashComp = GetComponent<DashScript>();
         TimeSlowComp = GetComponent<TimeSlowScript>();
+        TimeSlowComp.OnTimeSlowed += ZoomCamera;
         ItemStorageComp = GetComponent<ItemStorageScript>();
     }
 
@@ -231,6 +238,32 @@ public class PlayerController : MonoBehaviour
     {
         if (TimeSlowComp)
             TimeSlowComp.SlowTime();
+    }
+
+    void ZoomCamera(float Time , bool ZoomIn)
+    {
+        if(mcr_Lerp != null)
+        {
+            StopCoroutine (mcr_Lerp);
+            mcr_Lerp = null;
+        }
+        if(ZoomIn)
+            mcr_Lerp = StartCoroutine(LerpCamView(3, 2));
+        else
+            mcr_Lerp = StartCoroutine(LerpCamView(5, 0.5f));
+
+    }
+
+    IEnumerator LerpCamView(float ZoomSize,float ZoomTime)
+    {
+        float ElapsedTime = 0;
+        while (ElapsedTime < ZoomTime)
+        {
+            Cam.m_Lens.OrthographicSize = Mathf.Lerp(Cam.m_Lens.OrthographicSize, ZoomSize, ElapsedTime/ZoomTime);
+            ElapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        Cam.m_Lens.OrthographicSize = ZoomSize;
     }
 
     void Dash(InputAction.CallbackContext context)
