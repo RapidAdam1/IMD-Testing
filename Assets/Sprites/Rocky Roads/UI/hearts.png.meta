@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98ce8eca1749df4469d39be167c0ed00
+guid: 626c0308c0cedbc4aa796c3d6ca49fe1
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shoot (44x28)_0
+      name: hearts_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,20 +150,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97ca661899099ae4e97fb0952bafae20
-      internalID: -835911720
+      spriteID: 40c9694d51841d044bd5c5c9379a9731
+      internalID: 1871326262
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shoot (44x28)_1
+      name: hearts_1
       rect:
         serializedVersion: 2
-        x: 47
+        x: 16
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,20 +171,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1187be5da94c079439529b8380f3aa94
-      internalID: 2037778528
+      spriteID: 94ef250664fe2b24c9580e450634e954
+      internalID: 1818541743
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shoot (44x28)_2
+      name: hearts_2
       rect:
         serializedVersion: 2
-        x: 89
+        x: 32
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,20 +192,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9e4bd9e07d7ca6849b069bf263715b7e
-      internalID: 1171174001
+      spriteID: e1c42d9d6fdbc6348bc3d4d079d71a45
+      internalID: -2068054529
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shoot (44x28)_3
+      name: hearts_3
       rect:
         serializedVersion: 2
-        x: 132
+        x: 48
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,8 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: be395606a5ab0544dab256b342eea883
-      internalID: -765701176
+      spriteID: b0117941c44e84a458e84c03a1ffe486
+      internalID: -1129632288
       vertices: []
       indices: 
       edges: []
@@ -230,11 +230,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Shoot (44x28)_0: -835911720
-      Shoot (44x28)_1: 2037778528
-      Shoot (44x28)_2: 1171174001
-      Shoot (44x28)_3: -765701176
-      Shoot (44x28)_4: 517647255
+      hearts_0: 1871326262
+      hearts_1: 1818541743
+      hearts_2: -2068054529
+      hearts_3: -1129632288
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98ce8eca1749df4469d39be167c0ed00
+guid: 0ba70d24569aa60429c51fb0fe545d06
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -134,91 +134,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Shoot (44x28)_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 97ca661899099ae4e97fb0952bafae20
-      internalID: -835911720
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Shoot (44x28)_1
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 0
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1187be5da94c079439529b8380f3aa94
-      internalID: 2037778528
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Shoot (44x28)_2
-      rect:
-        serializedVersion: 2
-        x: 89
-        y: 0
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9e4bd9e07d7ca6849b069bf263715b7e
-      internalID: 1171174001
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Shoot (44x28)_3
-      rect:
-        serializedVersion: 2
-        x: 132
-        y: 0
-        width: 42
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: be395606a5ab0544dab256b342eea883
-      internalID: -765701176
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -229,12 +145,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Shoot (44x28)_0: -835911720
-      Shoot (44x28)_1: 2037778528
-      Shoot (44x28)_2: 1171174001
-      Shoot (44x28)_3: -765701176
-      Shoot (44x28)_4: 517647255
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

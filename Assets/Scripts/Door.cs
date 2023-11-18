@@ -32,7 +32,7 @@ public class Door : MonoBehaviour , IInteractable
         yield return new WaitForSecondsRealtime(2);
         LockSprite.SetActive(false);
         Destroy(DesiredItem);
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.4f);
         Destroy(gameObject);
     }
 

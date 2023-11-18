@@ -6,12 +6,12 @@ using UnityEngine;
 public class SpikeTrap : MonoBehaviour
 {
    
-    Collider2D m_collider;
     HealthComponent Health;
     bool SpikeActive = false;
+    [SerializeField] float Damage = 10;
+
     void Start()
     {
-       m_collider = GetComponent<Collider2D>();
     }
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -21,7 +21,7 @@ public class SpikeTrap : MonoBehaviour
             Health = collision.GetComponentInParent<HealthComponent>();
             if (SpikeActive && Health != null)
             {
-                Health.ApplyDamage(10);
+                Health.ApplyDamage(Damage);
             }
         }
     }
@@ -33,7 +33,7 @@ public class SpikeTrap : MonoBehaviour
     {
         if(Health != null)
         {
-            Health.ApplyDamage(10);
+            Health.ApplyDamage(Damage);
         }
         SpikeActive = true;
     }

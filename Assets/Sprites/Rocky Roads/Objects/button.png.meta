@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98ce8eca1749df4469d39be167c0ed00
+guid: fb7c73e6ef80e5a45814b0441d0fe3f5
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shoot (44x28)_0
+      name: button_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,20 +150,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97ca661899099ae4e97fb0952bafae20
-      internalID: -835911720
+      spriteID: 31d2cd9bfe4d65f4eb3ec6553ad0e374
+      internalID: -537416979
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shoot (44x28)_1
+      name: button_1
       rect:
         serializedVersion: 2
-        x: 47
+        x: 16
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,20 +171,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1187be5da94c079439529b8380f3aa94
-      internalID: 2037778528
+      spriteID: 135b49e3f58d819498d0f615d5ce9e73
+      internalID: -1883438134
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shoot (44x28)_2
+      name: button_2
       rect:
         serializedVersion: 2
-        x: 89
+        x: 32
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,20 +192,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9e4bd9e07d7ca6849b069bf263715b7e
-      internalID: 1171174001
+      spriteID: 6ce951c6da280df4aadf0c13839f8c46
+      internalID: -2143678927
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shoot (44x28)_3
+      name: button_3
       rect:
         serializedVersion: 2
-        x: 132
+        x: 48
         y: 0
-        width: 42
-        height: 28
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,8 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: be395606a5ab0544dab256b342eea883
-      internalID: -765701176
+      spriteID: 95f95f46749e74a4c8d59a5a82c2f7fb
+      internalID: -1330619658
       vertices: []
       indices: 
       edges: []
@@ -230,11 +230,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Shoot (44x28)_0: -835911720
-      Shoot (44x28)_1: 2037778528
-      Shoot (44x28)_2: 1171174001
-      Shoot (44x28)_3: -765701176
-      Shoot (44x28)_4: 517647255
+      button_0: -537416979
+      button_1: -1883438134
+      button_2: -2143678927
+      button_3: -1330619658
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 {
     PlayerInput m_PlayerInput;
     Rigidbody2D m_rb;
-    CornerCorrection CC;
+    Collisions CC;
 
     [SerializeField] float mf_moveSpeed = 10.0f;
     [SerializeField] float mf_jumpForce = 10.0f;
@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera Cam;
     [SerializeField] float CamZoomTime;
 
+    HealthComponent HealthComp;
     CoyoteTimeScript CoyoteTimeComp;
     JumpBufferScript JumpBufferComp;
     DashScript DashComp;
@@ -44,13 +45,19 @@ public class PlayerController : MonoBehaviour
     {
         m_PlayerInput = GetComponent<PlayerInput>();
         m_rb = GetComponent<Rigidbody2D>();
-        CC=GetComponentInChildren<CornerCorrection>();
+        CC=GetComponentInChildren<Collisions>();
 
         CoyoteTimeComp = GetComponent<CoyoteTimeScript>();
         JumpBufferComp = GetComponent<JumpBufferScript>();
         DashComp = GetComponent<DashScript>();
+
+        HealthComp = GetComponent<HealthComponent>();
+        if (HealthComp)
+            HealthComp.OnDeath += PlayerDead;
+
         TimeSlowComp = GetComponent<TimeSlowScript>();
-        TimeSlowComp.OnTimeSlowed += ZoomCamera;
+        if(TimeSlowComp)
+            TimeSlowComp.OnTimeSlowed += ZoomCamera;
         ItemStorageComp = GetComponent<ItemStorageScript>();
     }
 
@@ -270,5 +277,13 @@ public class PlayerController : MonoBehaviour
     {
         if (DashComp)
             DashComp.Dash(new Vector2(mf_axis,mf_Vert),m_rb);
+    }
+
+    void PlayerDead(bool IsPlayer)
+    {
+        if (IsPlayer)
+        {
+            
+        }
     }
 };

@@ -7,7 +7,10 @@ public class HealthPickup : MonoBehaviour, IInteractable
     [SerializeField] float HealthPercentToAdd = 10;
     public virtual void OnInteract(GameObject Interactor) 
     { 
-        Interactor.GetComponent<HealthComponent>().AddHealth(HealthPercentToAdd);
+        HealthComponent HealthComp = Interactor.GetComponent<HealthComponent>();
+        if (HealthComp.GetHealthRatio() == 1)
+            return;
+        HealthComp.AddHealth(HealthPercentToAdd);
         Destroy(gameObject);
     }
 
