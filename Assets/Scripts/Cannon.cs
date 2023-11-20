@@ -4,22 +4,44 @@ using UnityEngine;
 
 public class Cannon : MonoBehaviour
 {
+
+    enum FireDirection
+    {
+        Left,
+        Right
+    }
     [SerializeField] GameObject Cannonball;
     [SerializeField] GameObject FirePoint;
-    Vector2 FireDirection;
-    private void Start()
-    {
-        FireDirection = Vector2.left + new Vector2(transform.rotation.x,transform.rotation.y);
-        Debug.Log(FirePoint);
-    }
+    [SerializeField] FireDirection FireDir;
+    Vector2 ShootDir;
+    bool bActive = true;
 
     public void FireCannonBall()
     {
-        Instantiate(Cannonball);
+        switch (FireDir)
+        {
+            case FireDirection.Left:
+                ShootDir = Vector2.left;
+                break;
+            case FireDirection.Right:
+                ShootDir = Vector2.right;
+                break;
+        }
+        GameObject Ball = Instantiate(Cannonball, FirePoint.transform.position, transform.rotation);
+        Ball.GetComponent<Projectile>().Direction = ShootDir;
     }
 
-    private void Update()
+    private void Awake()
     {
-        FireCannonBall();
+        //StartCoroutine(ShootCannon());
+    }
+
+    IEnumerator ShootCannon()
+    {
+        while (bActive) 
+        {
+            yield return new WaitForSeconds(1);
+            FireCannonBall();
+        }
     }
 }
