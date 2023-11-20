@@ -20,9 +20,8 @@ public class HealthComponent : MonoBehaviour
         CurrentHealth = MaxHealth;
     }
     public float GetHealthRatio() { return CurrentHealth / MaxHealth; }
-    public void ApplyDamage(float DamagePercent)
+    public void ApplyDamage(float Damage)
     {
-        float Damage = MaxHealth / DamagePercent;
         CurrentHealth -= Damage;
         if (CurrentHealth <= 0) 
         {
@@ -34,10 +33,9 @@ public class HealthComponent : MonoBehaviour
 
     }
 
-    public void AddHealth(float HealthPercent)
+    public void AddHealth(float Health)
     {
-        float HealthToAdd = (MaxHealth/100) * HealthPercent;
-        Mathf.Clamp(CurrentHealth+=HealthToAdd, 0, MaxHealth);
+        Mathf.Clamp(CurrentHealth+=Health, 0, MaxHealth);
         OnHealthChange?.Invoke(CurrentHealth, MaxHealth);
         OnHealthChangeVFX?.Invoke(true);
     }

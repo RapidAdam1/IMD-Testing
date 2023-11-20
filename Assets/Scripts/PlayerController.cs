@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            m_rb.AddForce(Vector2.up * 100f,ForceMode2D.Impulse);
             StartCoroutine(SpriteFlash(Color.white));
 
         }

@@ -10,8 +10,6 @@ public class HealthUI : MonoBehaviour
     [SerializeField] Sprite HealthFull;
     [SerializeField] Sprite HealthEmpty;
 
-    [SerializeField] float Curr;
-    [SerializeField] float Max;
 
 
     private void Awake()
@@ -20,7 +18,7 @@ public class HealthUI : MonoBehaviour
         {
             Images.Add(I);
         }
-        SetHealthPercent(Curr,Max);
+        SetHealthPercent(10,10);
     }
 
     public void SetHealthPercent(float CurrentHealth, float MaxHealth)

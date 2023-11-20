@@ -13,10 +13,13 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        HealthComponent Health = collision.GetComponentInParent<HealthComponent>();
-        if (Health)
-            Health.ApplyDamage(DamagePercentage);
-        Destroy(gameObject);
+        if(collision.tag == "Player" || collision.tag == "Ground")
+        {
+            HealthComponent Health = collision.GetComponentInParent<HealthComponent>();
+            if (Health)
+                Health.ApplyDamage(DamagePercentage);
+            Destroy(gameObject);
+        }
     }
 
     private void Awake()
@@ -29,6 +32,5 @@ public class Projectile : MonoBehaviour
     {
         transform.position += Direction * MoveSpeed;
          rb.AddForce(Direction * MoveSpeed);
-         Debug.Log(Direction + "   " + MoveSpeed);
     }
 }

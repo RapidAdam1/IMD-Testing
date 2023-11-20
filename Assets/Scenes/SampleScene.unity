@@ -959,7 +959,7 @@ GameObject:
   - component: {fileID: 912405657}
   m_Layer: 0
   m_Name: Coll
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1386,7 +1386,7 @@ PrefabInstance:
       objectReference: {fileID: -2075990624, guid: e3169cad39558d94da99c575ede37058, type: 3}
     - target: {fileID: 3199620597272643611, guid: e5bbd1997b5a94e4581ebc0fe524c174, type: 3}
       propertyPath: Damage
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6282350086744622617, guid: e5bbd1997b5a94e4581ebc0fe524c174, type: 3}
       propertyPath: m_Name
@@ -14246,7 +14246,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1668710948
 GameObject:
@@ -14346,7 +14346,7 @@ GameObject:
   - component: {fileID: 1693285894}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14781,6 +14781,10 @@ PrefabInstance:
     - target: {fileID: 1728151713207206371, guid: b1a09cb7d3c10ce4d9fa27539590dbfd, type: 3}
       propertyPath: m_Name
       value: Cannon (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2717971866027946421, guid: b1a09cb7d3c10ce4d9fa27539590dbfd, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4068947110872684451, guid: b1a09cb7d3c10ce4d9fa27539590dbfd, type: 3}
       propertyPath: m_Offset.x
@@ -15632,7 +15636,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4665023725027055062, guid: 148e16edd44de6f41a763bc2393cb028, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4665023725027055062, guid: 148e16edd44de6f41a763bc2393cb028, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15782,7 +15786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7230305824058069849, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7505257800524345792, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_Size.x
@@ -16005,7 +16009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6792757121380964864, guid: 7ec55928789bcc6438af22724f2e7d10, type: 3}
       propertyPath: HealthPercentToAdd
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8219989177751776203, guid: 7ec55928789bcc6438af22724f2e7d10, type: 3}
       propertyPath: m_Name
