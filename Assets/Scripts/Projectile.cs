@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
 
     Collider2D Collider;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         HealthComponent Health = collision.gameObject.GetComponent<HealthComponent>();
         if (Health)

@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] CinemachineVirtualCamera Cam;
     [SerializeField] float CamZoomTime;
+    Color SpriteOriginalColour ;
 
     HealthComponent HealthComp;
     CoyoteTimeScript CoyoteTimeComp;
@@ -47,18 +48,46 @@ public class PlayerController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         CC=GetComponentInChildren<Collisions>();
 
+        SpriteOriginalColour = GetComponent<SpriteRenderer>().color;
+
         CoyoteTimeComp = GetComponent<CoyoteTimeScript>();
         JumpBufferComp = GetComponent<JumpBufferScript>();
         DashComp = GetComponent<DashScript>();
 
         HealthComp = GetComponent<HealthComponent>();
         if (HealthComp)
+        {
             HealthComp.OnDeath += PlayerDead;
+            HealthComp.OnHealthChangeVFX += OnHealthChange;
+        }
 
         TimeSlowComp = GetComponent<TimeSlowScript>();
         if(TimeSlowComp)
             TimeSlowComp.OnTimeSlowed += ZoomCamera;
         ItemStorageComp = GetComponent<ItemStorageScript>();
+    }
+
+    private void OnHealthChange(bool IsHealing)
+    {
+        if (IsHealing)
+        {
+            StartCoroutine(SpriteFlash(Color.green));
+            //Play Heal Sound
+        }
+        else
+        {
+            StartCoroutine(SpriteFlash(Color.white));
+
+        }
+    }
+    
+    IEnumerator SpriteFlash(Color Colour)
+    {
+        SpriteRenderer Sprite = GetComponent<SpriteRenderer>();
+        Sprite.color = Colour;
+        yield return new WaitForSecondsRealtime(0.1f);
+        Sprite.color = SpriteOriginalColour;
+        yield break;
     }
 
     #region Bindings
@@ -286,4 +315,4 @@ public class PlayerController : MonoBehaviour
             
         }
     }
-};
+}

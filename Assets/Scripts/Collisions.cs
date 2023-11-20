@@ -96,5 +96,9 @@ public class Collisions : MonoBehaviour
         return CanJump;
     }
 
-    public void EnableMainCollider(bool IsEnabled) {mainColl.enabled = IsEnabled;}
+    public void EnableMainCollider(bool IsEnabled) 
+    {
+        mainColl.enabled = IsEnabled;
+
+    }
 }

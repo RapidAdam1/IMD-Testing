@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
 
     HealthUI HealthCounter;
+    Text CoinCount;
+
     [SerializeField] float ScreenShakeIntensity = 1.0f;
     [SerializeField] GameObject Player;
+    [SerializeField] GameObject CoinM;
 
     private void Awake()
     {
         Player.GetComponent<HealthComponent>().OnHealthChange += UpdateHealth;
         HealthCounter = GetComponentInChildren<HealthUI>();
-
+        CoinManager CoinControl = CoinM.GetComponent<CoinManager>();
+        CoinControl.OnCoinUpdate += UpdateCoins;
+        CoinCount = GetComponentInChildren<Text>();
     }
 
 
@@ -22,6 +28,10 @@ public class PlayerUI : MonoBehaviour
     {
     }
 
+    void UpdateCoins(int NewScore)
+    {
+        CoinCount.text = "Coins: " + NewScore.ToString();
+    }
     public void UpdateHealth(float Current, float Max)
     {
         HealthCounter.SetHealthPercent(Current,Max);

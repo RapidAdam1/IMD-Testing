@@ -12,6 +12,8 @@ public class HealthComponent : MonoBehaviour
 
     public event Action<bool> OnDeath;
     public event Action<float,float> OnHealthChange;
+    public event Action<bool> OnHealthChangeVFX;
+
 
     private void Awake()
     {
@@ -28,6 +30,8 @@ public class HealthComponent : MonoBehaviour
             Death(); 
         }
         OnHealthChange?.Invoke(CurrentHealth, MaxHealth);
+        OnHealthChangeVFX?.Invoke(false);
+
     }
 
     public void AddHealth(float HealthPercent)
@@ -35,6 +39,7 @@ public class HealthComponent : MonoBehaviour
         float HealthToAdd = (MaxHealth/100) * HealthPercent;
         Mathf.Clamp(CurrentHealth+=HealthToAdd, 0, MaxHealth);
         OnHealthChange?.Invoke(CurrentHealth, MaxHealth);
+        OnHealthChangeVFX?.Invoke(true);
     }
 
     protected virtual void Death()

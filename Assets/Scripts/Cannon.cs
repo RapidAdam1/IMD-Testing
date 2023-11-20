@@ -20,6 +20,6 @@ public class Cannon : MonoBehaviour
 
     private void Update()
     {
-        
+        FireCannonBall();
     }
 }
