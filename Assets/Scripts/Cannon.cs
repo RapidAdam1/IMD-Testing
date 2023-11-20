@@ -18,6 +18,7 @@ public class Cannon : MonoBehaviour
 
     public void FireCannonBall()
     {
+        //Play Fire Cannon Sound
         switch (FireDir)
         {
             case FireDirection.Left:

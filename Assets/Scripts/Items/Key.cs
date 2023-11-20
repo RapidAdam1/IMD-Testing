@@ -19,7 +19,7 @@ public class Key : MonoBehaviour , IInteractable
         {
             PlayerInv.AddItem(gameObject);
             KeyFollowPoint = Interactor.GetComponent<PlayerController>().KeyFollowPoint;
-
+            //Play Collect Audio
             if (KeyFollowPoint) { mcr_Follow = StartCoroutine(FollowPlayer(KeyFollowPoint)); }
             
         }

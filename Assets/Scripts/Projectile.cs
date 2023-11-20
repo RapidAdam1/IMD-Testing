@@ -15,6 +15,7 @@ public class Projectile : MonoBehaviour
     {
         if(collision.tag == "Player" || collision.tag == "Ground")
         {
+            //Play Collide Sound
             HealthComponent Health = collision.GetComponentInParent<HealthComponent>();
             if (Health)
                 Health.ApplyDamage(DamagePercentage);

@@ -108,6 +108,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "e6d799b0-2f2d-42d1-932d-2a4b5f9d0c9b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "1D Axis",
                     "id": "77ae82d7-5f34-4147-9aa9-4f25fdc47fbb",
                     "path": "1DAxis(whichSideWins=1)",

@@ -15,7 +15,7 @@ public class TimeSlowScript : MonoBehaviour
     {
         if (bIsSlowed)
             return;
-
+        //Play Slow Time Sounds
         StartCoroutine(SlowTimeRemaining(SlowLength));
     }
 

@@ -33,12 +33,14 @@ public class SpikeTrap : MonoBehaviour
     {
         if(Health != null)
         {
+            //Play Spike Extend Audio
             Health.ApplyDamage(Damage);
         }
         SpikeActive = true;
     }
     private void DeactivateSpike() 
     { 
+        //Play Spike Retract Audio
         SpikeActive = false;
     }
 }

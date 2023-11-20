@@ -32,7 +32,9 @@ public class Door : MonoBehaviour , IInteractable
         yield return new WaitForSecondsRealtime(2);
         LockSprite.SetActive(false);
         Destroy(DesiredItem);
+        //Play Open Lock Audio
         yield return new WaitForSecondsRealtime(0.4f);
+        //Play Open Door Audio
         Destroy(gameObject);
     }
 

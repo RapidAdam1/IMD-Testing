@@ -157,6 +157,7 @@ Transform:
   - {fileID: 199969193}
   - {fileID: 169700126}
   - {fileID: 613733841}
+  - {fileID: 1077103640}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -942,6 +943,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833702765}
   m_CullTransparentMesh: 1
+--- !u!1001 &894260144
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 17372835}
+    m_Modifications:
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.18460634
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5373759940322749821, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+      propertyPath: m_Name
+      value: Coin (5)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
 --- !u!1 &912405649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,8 +1412,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HealthFull: {fileID: 1818541743, guid: 626c0308c0cedbc4aa796c3d6ca49fe1, type: 3}
   HealthEmpty: {fileID: -1129632288, guid: 626c0308c0cedbc4aa796c3d6ca49fe1, type: 3}
-  Curr: 10
-  Max: 10
 --- !u!1001 &993441647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1503,6 +1563,11 @@ Transform:
   m_Father: {fileID: 1693285885}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1077103640 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4876963508433399119, guid: ac8d769b01c3a0348be3d468c8d9cb0d, type: 3}
+  m_PrefabInstance: {fileID: 894260144}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1098774475
 GameObject:
   m_ObjectHideFlags: 0
@@ -15786,7 +15851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7230305824058069849, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7505257800524345792, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
       propertyPath: m_Size.x

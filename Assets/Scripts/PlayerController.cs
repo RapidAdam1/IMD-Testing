@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         {
             m_rb.AddForce(Vector2.up * 100f,ForceMode2D.Impulse);
             StartCoroutine(SpriteFlash(Color.white));
-
+            //Play Hurt Sound
         }
     }
     
