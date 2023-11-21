@@ -144,9 +144,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd84873e1338b844180e236e86b9f4b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  KeyCollect: {fileID: 0}
   BounceSpeed: 5
   BounceHeight: 0.5
-  MoveToSpeed: 1
+  MoveToSpeed: 3
 --- !u!95 &1858899286731011117
 Animator:
   serializedVersion: 5

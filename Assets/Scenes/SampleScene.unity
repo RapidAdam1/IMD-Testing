@@ -202,7 +202,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 493e13e4dda9dcc47a43eafb6660e5b3, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.198
+  m_Volume: 0.061
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -16012,6 +16012,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door2
       objectReference: {fileID: 0}
+    - target: {fileID: 7735855022148815022, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7735855022148815022, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7735855022148815022, guid: c28e47f73fc13e94c8eab8196500a8ec, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16083,7 +16095,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8618975816283188961, guid: 148e16edd44de6f41a763bc2393cb028, type: 3}
       propertyPath: MoveToSpeed
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8618975816283188961, guid: 148e16edd44de6f41a763bc2393cb028, type: 3}
       propertyPath: BounceHeight

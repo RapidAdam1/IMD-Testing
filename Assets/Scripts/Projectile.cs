@@ -7,9 +7,9 @@ public class Projectile : MonoBehaviour
     [SerializeField] float MoveSpeed;
     [SerializeField] float DamagePercentage;
     Rigidbody2D rb;
+    AudioSource audioSource;
     public Vector3 Direction;
     Collider2D Collider;
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -19,6 +19,7 @@ public class Projectile : MonoBehaviour
             HealthComponent Health = collision.GetComponentInParent<HealthComponent>();
             if (Health)
                 Health.ApplyDamage(DamagePercentage);
+            audioSource.Play();
             Destroy(gameObject);
         }
     }
@@ -26,7 +27,7 @@ public class Projectile : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
