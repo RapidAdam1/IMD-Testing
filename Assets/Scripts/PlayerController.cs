@@ -33,8 +33,20 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] CinemachineVirtualCamera Cam;
     [SerializeField] float CamZoomTime;
+
+
+
+    AudioSource m_audioSource;
+    [SerializeField] AudioClip JumpAudio;
+    [SerializeField] AudioClip HurtAudio;
+    [SerializeField] AudioClip HealAudio;
+
+
+
+
     Color SpriteOriginalColour ;
 
+    
     HealthComponent HealthComp;
     CoyoteTimeScript CoyoteTimeComp;
     JumpBufferScript JumpBufferComp;
@@ -48,6 +60,7 @@ public class PlayerController : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         CC=GetComponentInChildren<Collisions>();
 
+        m_audioSource = GetComponent<AudioSource>();
         SpriteOriginalColour = GetComponent<SpriteRenderer>().color;
 
         CoyoteTimeComp = GetComponent<CoyoteTimeScript>();
@@ -72,13 +85,14 @@ public class PlayerController : MonoBehaviour
         if (IsHealing)
         {
             StartCoroutine(SpriteFlash(Color.green));
-            //Play Heal Sound
+            m_audioSource.PlayOneShot(HealAudio, .5f);
         }
         else
         {
             m_rb.AddForce(Vector2.up * 100f,ForceMode2D.Impulse);
             StartCoroutine(SpriteFlash(Color.white));
-            //Play Hurt Sound
+            m_audioSource.PlayOneShot(HurtAudio, 1);
+
         }
     }
     
@@ -191,6 +205,7 @@ public class PlayerController : MonoBehaviour
     }
     public void PlayerJump()
     {
+        m_audioSource.PlayOneShot(JumpAudio, 0.3f);
         m_rb.gravityScale = 1;
         m_rb.velocity = new Vector2(m_rb.velocity.x, 0);
         m_rb.AddForce(Vector2.up * mf_jumpForce, ForceMode2D.Impulse);
@@ -306,7 +321,10 @@ public class PlayerController : MonoBehaviour
     void Dash(InputAction.CallbackContext context)
     {
         if (DashComp)
+        {
             DashComp.Dash(new Vector2(mf_axis,mf_Vert),m_rb);
+        }
+
     }
 
     void PlayerDead(bool IsPlayer)

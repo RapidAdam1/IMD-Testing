@@ -3,7 +3,9 @@ guid: 8e0d7f67369226d44b0e2f6bd6121289
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - SlowInSFX: {fileID: 8300000, guid: 0ccda2a49ff9c944c90b94d2ee150494, type: 3}
+  - SlowOutSFX: {fileID: 8300000, guid: 750cb45f8c712ab46b04a406fcbf3d70, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

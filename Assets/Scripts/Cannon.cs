@@ -13,6 +13,7 @@ public class Cannon : MonoBehaviour
     [SerializeField] GameObject Cannonball;
     [SerializeField] GameObject FirePoint;
     [SerializeField] FireDirection FireDir;
+    AudioSource m_AudioSource;
     Vector2 ShootDir;
     bool bActive = true;
 
@@ -28,13 +29,14 @@ public class Cannon : MonoBehaviour
                 ShootDir = Vector2.right;
                 break;
         }
+        m_AudioSource.Play();
         GameObject Ball = Instantiate(Cannonball, FirePoint.transform.position, transform.rotation);
         Ball.GetComponent<Projectile>().Direction = ShootDir;
     }
 
     private void Awake()
     {
-        //StartCoroutine(ShootCannon());
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     IEnumerator ShootCannon()

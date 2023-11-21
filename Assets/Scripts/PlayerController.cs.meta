@@ -3,7 +3,13 @@ guid: 374d99563afbbb741bbbe32e5e2b0030
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - KeyFollowPoint: {instanceID: 0}
+  - Cam: {instanceID: 0}
+  - JumpAudio: {fileID: 8300000, guid: 84565ea3f47a21949a79fb25460eebf4, type: 3}
+  - DashAudio: {fileID: 8300000, guid: 51c0906d0b72634419944264272e23bc, type: 3}
+  - HurtAudio: {fileID: 8300000, guid: 95d38de929060584681cb4336d5c7812, type: 3}
+  - HealAudio: {fileID: 8300000, guid: 2cbe6c76eaf37d54db7ca21bba782805, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

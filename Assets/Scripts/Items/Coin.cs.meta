@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 115b69bb94febec4eadb1b1e3db0db65
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - CoinCollectSound: {fileID: 8300000, guid: 599f697e3c3c202409bc0088a4722d95, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

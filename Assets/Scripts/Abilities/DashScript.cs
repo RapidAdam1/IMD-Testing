@@ -12,12 +12,14 @@ public class DashScript : MonoBehaviour
     [SerializeField] int m_DashCount = 1;
     [SerializeField] [Range(0,1.5f)] float VerticalSpeedMultiplier = 1;
     [SerializeField] [Range(0.5f, 2)] float HorizontalSpeedMultiplier = 1;
-
+    AudioSource m_AudioSource;
+    [SerializeField] AudioClip DashAudio;
     int m_Dashes = 1;
 
     private void Awake()
     {
-        PlayerCon = GetComponent<PlayerController>();    
+        PlayerCon = GetComponent<PlayerController>();
+        m_AudioSource = GetComponent<AudioSource>();
         TrailRenderer = GetComponent<TrailRenderer>();
     }
 
@@ -30,6 +32,7 @@ public class DashScript : MonoBehaviour
         }
         if (Direction.x != 0 || Direction.y != 0)
         {
+            m_AudioSource.PlayOneShot(DashAudio, 1);
             OwningRigidBody.velocity = new Vector2(0, 0);
             OwningRigidBody.AddForce(Direction * mf_DashForce, ForceMode2D.Impulse);
             StartCoroutine(IE_Dash(OwningRigidBody));
