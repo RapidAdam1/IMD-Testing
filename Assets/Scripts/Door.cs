@@ -7,10 +7,14 @@ public class Door : MonoBehaviour , IInteractable
     private Collider2D m_Collder;
     [SerializeField] GameObject DesiredItem;
     [SerializeField] GameObject LockSprite;
+    AudioSource m_AudioSource;
+    [SerializeField] AudioClip DoorUnlock;
+    [SerializeField] AudioClip DoorOpen;
 
     private void Awake()
     {
         m_Collder = GetComponentInChildren<Collider2D>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     public void OnInteract(GameObject Interactor)
@@ -30,11 +34,13 @@ public class Door : MonoBehaviour , IInteractable
     {
 
         yield return new WaitForSecondsRealtime(2);
+        m_AudioSource.PlayOneShot(DoorUnlock);
         LockSprite.SetActive(false);
         Destroy(DesiredItem);
-        //Play Open Lock Audio
         yield return new WaitForSecondsRealtime(0.4f);
-        //Play Open Door Audio
+        m_AudioSource.PlayOneShot(DoorOpen);
+        enabled = false;
+        yield return new WaitForSecondsRealtime(1f);
         Destroy(gameObject);
     }
 

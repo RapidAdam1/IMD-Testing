@@ -3,7 +3,11 @@ guid: eb7d7cd4edb29df46ab1badc99a75e96
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - DesiredItem: {instanceID: 0}
+  - LockSprite: {instanceID: 0}
+  - DoorUnlock: {fileID: 8300000, guid: 58134b2fe523b2344b04c8de124c7a46, type: 3}
+  - DoorOpen: {fileID: 8300000, guid: cea4deb4c5f8c584e91a0519f3231282, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
