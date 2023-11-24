@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 { 
-    [SerializeField] float MaxHealth = 10.0f;
+    [SerializeField] public float MaxHealth = 10.0f;
 
     float CurrentHealth;
     [SerializeField] bool IsPlayer;
 
-    public event Action<bool> OnDeath;
-    public event Action<float,float> OnHealthChange;
-    public event Action<bool> OnHealthChangeVFX;
+    public event Action OnDeath;
+    public event Action<float> OnHealthIncreased;
+    public event Action<float> OnHealthDecreased;
 
 
     private void Awake()
@@ -28,29 +28,18 @@ public class HealthComponent : MonoBehaviour
             CurrentHealth = 0;
             Death(); 
         }
-        OnHealthChange?.Invoke(CurrentHealth, MaxHealth);
-        OnHealthChangeVFX?.Invoke(false);
-
+        OnHealthDecreased?.Invoke(CurrentHealth);
     }
 
     public void AddHealth(float Health)
     {
         Mathf.Clamp(CurrentHealth+=Health, 0, MaxHealth);
-        OnHealthChange?.Invoke(CurrentHealth, MaxHealth);
-        OnHealthChangeVFX?.Invoke(true);
+        OnHealthIncreased?.Invoke(CurrentHealth);
     }
 
     protected virtual void Death()
     {
-        if(IsPlayer)
-        {
-            OnDeath?.Invoke(true);
-        }
-        else
-        {
-            OnDeath?.Invoke(false);
-            Destroy(gameObject);
-        }
+        OnDeath?.Invoke();
     }
 
 }

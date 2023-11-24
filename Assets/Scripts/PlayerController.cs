@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 //https://essssam.itch.io/rocky-roads
 
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioClip HurtAudio;
     [SerializeField] AudioClip HealAudio;
 
-
+    [SerializeField] PlayerUI HUD;
 
 
     Color SpriteOriginalColour ;
@@ -71,7 +72,8 @@ public class PlayerController : MonoBehaviour
         if (HealthComp)
         {
             HealthComp.OnDeath += PlayerDead;
-            HealthComp.OnHealthChangeVFX += OnHealthChange;
+            HealthComp.OnHealthIncreased += Handle_HealthIncrease;
+            HealthComp.OnHealthDecreased += Handle_HealthDeacrease;
         }
 
         TimeSlowComp = GetComponent<TimeSlowScript>();
@@ -80,20 +82,17 @@ public class PlayerController : MonoBehaviour
         ItemStorageComp = GetComponent<ItemStorageScript>();
     }
 
-    private void OnHealthChange(bool IsHealing)
+    private void Handle_HealthIncrease(float NewHealth)
     {
-        if (IsHealing)
-        {
-            StartCoroutine(SpriteFlash(Color.green));
-            m_audioSource.PlayOneShot(HealAudio, .5f);
-        }
-        else
-        {
-            m_rb.AddForce(Vector2.up * 100f,ForceMode2D.Impulse);
-            StartCoroutine(SpriteFlash(Color.white));
-            m_audioSource.PlayOneShot(HurtAudio, 1);
-
-        }
+        StartCoroutine(SpriteFlash(Color.green));
+        m_audioSource.PlayOneShot(HealAudio, .5f);
+    }
+    private void Handle_HealthDeacrease(float NewHealth)
+    {
+        m_rb.AddForce(Vector2.up * 100f, ForceMode2D.Impulse);
+        StartCoroutine(SpriteFlash(Color.white));
+        HUD.DoUIShake(0.2f);
+        m_audioSource.PlayOneShot(HurtAudio, 1);
     }
     
     IEnumerator SpriteFlash(Color Colour)
@@ -327,11 +326,15 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void PlayerDead(bool IsPlayer)
+    void PlayerDead()
     {
-        if (IsPlayer)
-        {
-            
-        }
+        StartCoroutine(RestartScene());
+    }
+
+    IEnumerator RestartScene()
+    {
+        HUD.Dead();
+        yield return new WaitForSecondsRealtime(2f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.UI.Image;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -13,31 +14,40 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] float ScreenShakeIntensity = 1.0f;
     [SerializeField] GameObject Player;
     [SerializeField] GameObject CoinM;
+    [SerializeField] Image DeathImage;
+    [SerializeField] GameObject Shakeable;
 
     private void Awake()
     {
-        Player.GetComponent<HealthComponent>().OnHealthChange += UpdateHealth;
+        HealthComponent Health = Player.GetComponent<HealthComponent>();
+        Health.OnHealthIncreased += UpdateHealth;
+        Health.OnHealthDecreased += UpdateHealth;
+
+        DeathImage.enabled = false;
+
         HealthCounter = GetComponentInChildren<HealthUI>();
         CoinManager CoinControl = CoinM.GetComponent<CoinManager>();
         CoinControl.OnCoinUpdate += UpdateCoins;
         CoinCount = GetComponentInChildren<Text>();
     }
 
-
-    private void Start()
-    {
-    }
-
     void UpdateCoins(int NewScore)
     {
         CoinCount.text = "Coins: " + NewScore.ToString();
     }
-    public void UpdateHealth(float Current, float Max)
+ 
+    public void UpdateHealth(float Current)
     {
-        HealthCounter.SetHealthPercent(Current,Max);
+        HealthCounter.SetHealthPercent(Current,Player.GetComponent<HealthComponent>().MaxHealth);
     }
 
     public void DoUIShake(float Duration) { StartCoroutine(ScreenShake(Duration,ScreenShakeIntensity)); }
+
+    public void Dead()
+    {
+        Shakeable.SetActive(false);
+        DeathImage.enabled = true;
+    }
 
     IEnumerator ScreenShake(float Duration,float Intensity)
     {
@@ -47,8 +57,7 @@ public class PlayerUI : MonoBehaviour
         while (ElapsedTime < Duration)
         {
             ElapsedTime += Time.deltaTime;
-            this.transform.position = Random.insideUnitSphere * Intensity + Origin;
-            GUI.matrix = Matrix4x4.TRS(Origin*Intensity, Quaternion.identity, Vector3.one);
+            Shakeable.transform.position = Random.insideUnitSphere * Intensity + Origin;
             yield return new WaitForFixedUpdate() ;
         }
         Debug.Log("EndScreenShake");
